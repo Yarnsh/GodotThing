@@ -9,21 +9,6 @@
 
 [node name="mod1" parent="." instance=ExtResource( 2 )]
 
-[node name="Camera" type="Camera" parent="mod1"]
-
-_import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-transform/local = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.69713, 4.7823 )
-projection = 0
-fov = 65.0
-near = 0.1
-far = 100.0
-keep_aspect = 1
-current = true
-visible_layers = 1048575
-environment = null
-h_offset = 0.0
-v_offset = 0.0
-
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 
 _import_transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
