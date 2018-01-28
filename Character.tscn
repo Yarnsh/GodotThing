@@ -77,6 +77,11 @@ func _physics_process(delta):
 	
 	var currentfacing = Vector3(0.0,0.0,-1.0).rotated(Vector3(0.0,1.0,0.0), rotation.y)
 	
+	if (get_node(\"CameraSpatial/ViewRay\").is_colliding()):
+		get_node(\"CameraSpatial/ViewRay/Camera\").translation = get_node(\"CameraSpatial/ViewRay\").to_local(get_node(\"CameraSpatial/ViewRay\").get_collision_point())
+	else:
+		get_node(\"CameraSpatial/ViewRay/Camera\").translation = Vector3(0,0,0)
+	
 	if (dir.length_squared() > 0.0):
 		if (currentfacing.length_squared() > 0.0):
 			look_at(translation + closerDirVector(currentfacing, dir, 0.1), Vector3(0.0,1.0,0.0))
@@ -89,11 +94,6 @@ func _physics_process(delta):
 	
 	torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 	torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
-	
-	if (get_node(\"CameraSpatial/ViewRay\").is_colliding()):
-		get_node(\"CameraSpatial/ViewRay/Camera\").translation = get_node(\"CameraSpatial/ViewRay\").to_local(get_node(\"CameraSpatial/ViewRay\").get_collision_point())
-	else:
-		get_node(\"CameraSpatial/ViewRay/Camera\").translation = Vector3(0,0,0)
 	
 	if (get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").is_colliding()):
 		leftWeaponNode.look_at(get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point(), Vector3(0,1,0));
