@@ -1,6 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Mecha1/Armature.scn" type="PackedScene" id=1]
+[ext_resource path="res://Mecha1/Mecha1act/Plane.mesh" type="ArrayMesh" id=1]
+[ext_resource path="res://Mecha1/Material.material" type="Material" id=2]
+[ext_resource path="res://Mecha1/Mecha1act/Plane_001.mesh" type="ArrayMesh" id=3]
+[ext_resource path="res://Mecha1/Material_001.material" type="Material" id=4]
 
 [sub_resource type="GDScript" id=1]
 
@@ -45,14 +48,14 @@ func _ready():
 	set_process_input(true)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	torso_skeleton = get_node(\"Model/Skeleton/TorsoAttach/Armature.001/Skeleton\")
+	torso_skeleton = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
 	torso_yaw_bone_transform = torso_skeleton.get_bone_pose(torso_yaw_bone_id)
 	torso_pitch_bone_id = torso_skeleton.find_bone(\"Pitch\")
 	torso_pitch_bone_transform = torso_skeleton.get_bone_pose(torso_pitch_bone_id)
 	
-	leftWeaponNode = get_node(\"Model/Skeleton/TorsoAttach/Armature.001/Skeleton/LeftWeapon/Armature.002\")
-	leftWeaponTransform = leftWeaponNode.global_transform
+	#leftWeaponNode = get_node(\"Model/Skeleton/TorsoAttach/Armature1/Skeleton/LeftWeapon/Armature2\")
+	#leftWeaponTransform = leftWeaponNode.global_transform
 
 func _input(event):
 	if  (event.is_class(\"InputEventMouseMotion\")):
@@ -95,8 +98,8 @@ func _physics_process(delta):
 	torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 	torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
 	
-	if (get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").is_colliding()):
-		leftWeaponNode.look_at(get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point(), Vector3(0,1,0));
+	#if (get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").is_colliding()):
+		#leftWeaponNode.look_at(get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point(), Vector3(0,1,0));
 	
 	if (is_on_floor()):
 		vel += dir*accelspeed*delta
@@ -134,22 +137,14 @@ collision/safe_margin = 0.001
 script = SubResource( 1 )
 _sections_unfolded = [ "Axis Lock", "Collision", "Transform", "collision" ]
 
-[node name="Model" parent="." index="0" instance=ExtResource( 1 )]
-
-transform = Transform( -1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 0, 0 )
-
-[node name="Skeleton" parent="Model/Skeleton/TorsoAttach/Armature.001" index="0"]
-
-bones/3/bound_childs = [ NodePath("LeftWeapon") ]
-
-[node name="CollisionShape" type="CollisionShape" parent="." index="1"]
+[node name="CollisionShape" type="CollisionShape" parent="." index="0"]
 
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 3.17993, 0 )
 shape = SubResource( 2 )
 disabled = false
 _sections_unfolded = [ "Transform" ]
 
-[node name="CameraSpatial" type="Spatial" parent="." index="2"]
+[node name="CameraSpatial" type="Spatial" parent="." index="1"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.58293, 0 )
 _sections_unfolded = [ "Transform" ]
@@ -187,5 +182,135 @@ exclude_parent = true
 cast_to = Vector3( 0, 0, -100 )
 collision_mask = 1
 
+[node name="Model" type="Spatial" parent="." index="2"]
 
-[editable path="Model"]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Armature" type="Spatial" parent="Model" index="0"]
+
+[node name="Skeleton" type="Skeleton" parent="Model/Armature" index="0"]
+
+bones/0/name = "Bone"
+bones/0/parent = -1
+bones/0/rest = Transform( 1, 2.38419e-07, 8.88178e-16, -1.058e-08, 0.0443759, -0.999015, -2.38184e-07, 0.999015, 0.0443757, 0, 3.77078, -0.69969 )
+bones/0/enabled = true
+bones/0/bound_childs = [  ]
+bones/1/name = "waist.L"
+bones/1/parent = 0
+bones/1/rest = Transform( -2.37978e-07, -1.05709e-08, -1, 0.999015, 0.0443759, -2.38212e-07, 0.0443759, -0.999015, 1.52049e-15, -2.84217e-14, 1.19209e-07, 2.38419e-07 )
+bones/1/enabled = true
+bones/1/bound_childs = [  ]
+bones/2/name = "Uleg.L"
+bones/2/parent = 1
+bones/2/rest = Transform( 2.83122e-07, 0.767644, -0.640877, 2.38419e-07, 0.640877, 0.767644, 1, -3.42727e-07, 2.98023e-08, 1.19209e-07, 2.38419e-07, -1.50912 )
+bones/2/enabled = true
+bones/2/bound_childs = [  ]
+bones/3/name = "Mleg.L"
+bones/3/parent = 2
+bones/3/rest = Transform( -1, 1.2068e-07, 3.49036e-07, 3.69047e-07, 0.362205, 0.932099, -1.39368e-08, 0.932099, -0.362205, 1.19209e-07, 0, -1.83417 )
+bones/3/enabled = true
+bones/3/bound_childs = [  ]
+bones/4/name = "Lleg.L"
+bones/4/parent = 3
+bones/4/rest = Transform( -1, 4.50657e-07, 5.33335e-08, 1.14747e-07, 0.137399, 0.990516, 4.39055e-07, 0.990516, -0.137398, 0, 0, -1.25405 )
+bones/4/enabled = true
+bones/4/bound_childs = [  ]
+bones/5/name = "foot.L"
+bones/5/parent = 4
+bones/5/rest = Transform( -1, -3.47278e-07, 1.78814e-07, 3.90579e-07, -0.894787, 0.446493, 4.94313e-09, 0.446493, 0.894787, -1.19209e-07, 0, -1.67695 )
+bones/5/enabled = true
+bones/5/bound_childs = [  ]
+bones/6/name = "waist.R"
+bones/6/parent = 0
+bones/6/rest = Transform( 2.37977e-07, -1.05709e-08, 1, -0.999015, 0.0443759, 2.38212e-07, -0.0443759, -0.999015, -1.52049e-15, -2.84217e-14, 1.19209e-07, 2.38419e-07 )
+bones/6/enabled = true
+bones/6/bound_childs = [  ]
+bones/7/name = "Uleg.R"
+bones/7/parent = 6
+bones/7/rest = Transform( 2.83122e-07, -0.767644, 0.640877, -2.38419e-07, 0.640877, 0.767644, -1, -3.42727e-07, 2.98023e-08, -1.19209e-07, 2.38419e-07, -1.50912 )
+bones/7/enabled = true
+bones/7/bound_childs = [  ]
+bones/8/name = "Mleg.R"
+bones/8/parent = 7
+bones/8/rest = Transform( -1, -1.2068e-07, -3.49036e-07, -3.69047e-07, 0.362205, 0.932099, 1.39368e-08, 0.932099, -0.362205, -1.19209e-07, 0, -1.83417 )
+bones/8/enabled = true
+bones/8/bound_childs = [  ]
+bones/9/name = "Lleg.R"
+bones/9/parent = 8
+bones/9/rest = Transform( -1, -4.50657e-07, -5.33335e-08, -1.14747e-07, 0.137399, 0.990516, -4.39055e-07, 0.990516, -0.137398, 0, 0, -1.25405 )
+bones/9/enabled = true
+bones/9/bound_childs = [  ]
+bones/10/name = "foot.R"
+bones/10/parent = 9
+bones/10/rest = Transform( -1, 3.47278e-07, -1.78814e-07, -3.90579e-07, -0.894787, 0.446493, -4.94312e-09, 0.446493, 0.894787, 1.19209e-07, 0, -1.67695 )
+bones/10/enabled = true
+bones/10/bound_childs = [  ]
+
+[node name="Plane" type="MeshInstance" parent="Model/Armature/Skeleton" index="0"]
+
+layers = 1
+material_override = null
+cast_shadow = 1
+extra_cull_margin = 0.0
+use_in_baked_light = false
+lod_min_distance = 0.0
+lod_min_hysteresis = 0.0
+lod_max_distance = 0.0
+lod_max_hysteresis = 0.0
+mesh = ExtResource( 1 )
+skeleton = NodePath("..")
+material/0 = ExtResource( 2 )
+_sections_unfolded = [ "material" ]
+
+[node name="TorsoAttach" type="BoneAttachment" parent="Model/Armature/Skeleton" index="1"]
+
+bone_name = ""
+
+[node name="Armature1" type="Spatial" parent="Model/Armature/Skeleton/TorsoAttach" index="0"]
+
+[node name="Skeleton" type="Skeleton" parent="Model/Armature/Skeleton/TorsoAttach/Armature1" index="0"]
+
+bones/0/name = "Yaw"
+bones/0/parent = -1
+bones/0/rest = Transform( 1, 2.38419e-07, 0, 3.38813e-21, 1.19209e-07, -1, -2.38419e-07, 1, 0, -2.10321e-12, 4.28024, -0.7272 )
+bones/0/enabled = true
+bones/0/bound_childs = [  ]
+bones/1/name = "Pitch"
+bones/1/parent = 0
+bones/1/rest = Transform( 1, -2.38419e-07, 0, 2.38419e-07, 1, 0, 1.69407e-21, 0, 1, -1.42109e-14, 0, -0.497981 )
+bones/1/enabled = true
+bones/1/bound_childs = [  ]
+bones/2/name = "armW.R"
+bones/2/parent = 1
+bones/2/rest = Transform( 0, 0, 1, -1, 7.54979e-08, 0, -7.54979e-08, -1, -2.01948e-28, -0.992361, -0.409376, -0.940294 )
+bones/2/enabled = true
+bones/2/bound_childs = [  ]
+bones/3/name = "armW.L"
+bones/3/parent = 1
+bones/3/rest = Transform( 0, 0, -1, 1, 7.54979e-08, 0, 7.54979e-08, -1, 2.01948e-28, 0.992361, -0.409376, -0.940294 )
+bones/3/enabled = true
+bones/3/bound_childs = [ NodePath("LeftWeapon") ]
+
+[node name="Plane1" type="MeshInstance" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="0"]
+
+layers = 1
+material_override = null
+cast_shadow = 1
+extra_cull_margin = 0.0
+use_in_baked_light = false
+lod_min_distance = 0.0
+lod_min_hysteresis = 0.0
+lod_max_distance = 0.0
+lod_max_hysteresis = 0.0
+mesh = ExtResource( 3 )
+skeleton = NodePath("..")
+material/0 = ExtResource( 4 )
+_sections_unfolded = [ "material" ]
+
+[node name="LeftWeapon" type="BoneAttachment" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="1"]
+
+transform = Transform( -1.42109e-14, -1.07289e-21, -1, 4.37114e-08, 1, -2.84217e-14, 1, 7.54979e-08, 1.42109e-14, 0.992361, 5.71852, -1.13658 )
+bone_name = "armW.L"
+
+

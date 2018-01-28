@@ -10,7 +10,7 @@ source_file="res://Mecha1/Mecha1act.dae"
 source_md5="f6fcb0e978287541ea828d3b3b8210a9"
 
 dest_files=[ "res://.import/Mecha1act.dae-e81b07c39d3fba63ea4b722a5e38d9d0.scn" ]
-dest_md5="292ce9bc1e59d50eab881fa920efd5bc"
+dest_md5="ae0ff6c81bdd4cbad32a0638596d200d"
 
 [params]
 
@@ -19,15 +19,15 @@ nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
 nodes/storage=0
-materials/location=1
+materials/location=0
 materials/storage=1
 materials/keep_on_reimport=true
 meshes/compress=true
 meshes/ensure_tangents=true
-meshes/storage=0
+meshes/storage=1
 meshes/light_baking=0
 meshes/lightmap_texel_size=0.1
-external_files/store_in_subdir=false
+external_files/store_in_subdir=true
 animation/import=true
 animation/fps=15
 animation/filter_script=""
