@@ -2,15 +2,15 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Mech01.dae-2f4f78dc69e0b86e63d5f57c23b44ef6.scn"
+path="res://.import/Mecha1act.dae-e81b07c39d3fba63ea4b722a5e38d9d0.scn"
 
 [deps]
 
-source_file="res://Stuff/Mech01.dae"
-source_md5="d94d353bc3a73fc7b5e1914c3fa6cc37"
+source_file="res://Mecha1/Mecha1act.dae"
+source_md5="f6fcb0e978287541ea828d3b3b8210a9"
 
-dest_files=[ "res://.import/Mech01.dae-2f4f78dc69e0b86e63d5f57c23b44ef6.scn" ]
-dest_md5="8c6f583ddb8345a2f676835844678c4a"
+dest_files=[ "res://.import/Mecha1act.dae-e81b07c39d3fba63ea4b722a5e38d9d0.scn" ]
+dest_md5="292ce9bc1e59d50eab881fa920efd5bc"
 
 [params]
 
@@ -18,10 +18,10 @@ nodes/root_type="Spatial"
 nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
-nodes/storage=1
-materials/location=0
-materials/storage=0
-materials/keep_on_reimport=false
+nodes/storage=0
+materials/location=1
+materials/storage=1
+materials/keep_on_reimport=true
 meshes/compress=true
 meshes/ensure_tangents=true
 meshes/storage=0

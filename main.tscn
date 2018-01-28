@@ -50,7 +50,7 @@ disabled = false
 
 [node name="KinematicBody" parent="." index="1" instance=ExtResource( 1 )]
 
-[node name="Scene Root" parent="." index="2" instance=ExtResource( 2 )]
+[node name="Terrain" parent="." index="2" instance=ExtResource( 2 )]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.426499, -0.660412, 0.25367 )
 

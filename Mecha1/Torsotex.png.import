@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/Torsotex.png-8e6b2a211d3ca727716848049f5ffd80.s3tc.stex"
-path.etc2="res://.import/Torsotex.png-8e6b2a211d3ca727716848049f5ffd80.etc2.stex"
+path.s3tc="res://.import/Torsotex.png-bd2c97931df85b42d13eef30cc09fae7.s3tc.stex"
+path.etc2="res://.import/Torsotex.png-bd2c97931df85b42d13eef30cc09fae7.etc2.stex"
 
 [deps]
 
-source_file="res://Stuff/Torsotex.png"
+source_file="res://Mecha1/Torsotex.png"
 source_md5="9745e070924860d12d2b4994b8f2654f"
 
-dest_files=[ "res://.import/Torsotex.png-8e6b2a211d3ca727716848049f5ffd80.s3tc.stex", "res://.import/Torsotex.png-8e6b2a211d3ca727716848049f5ffd80.etc2.stex" ]
+dest_files=[ "res://.import/Torsotex.png-bd2c97931df85b42d13eef30cc09fae7.s3tc.stex", "res://.import/Torsotex.png-bd2c97931df85b42d13eef30cc09fae7.etc2.stex" ]
 dest_md5="36ecaa973064ee7ffae7c3d2c6ccf680"
 
 [params]
