@@ -18,6 +18,8 @@ var rotspeed = 0.05
 var deaccelspeed = 10
 var vel = Vector3()
 
+var bulletScene
+
 var torso_skeleton
 
 var torso_yaw_bone_id = 0
@@ -33,6 +35,13 @@ var pitch_limit = 0.5
 
 var leftWeaponNode
 var leftWeaponTransform = Transform()
+var leftWeaponFireRate = 0.2
+var leftWeaponCooldown = 0.0
+
+var rightWeaponNode
+var rightWeaponTransform = Transform()
+var rightWeaponFireRate = 1.0
+var rightWeaponCooldown = 0.0
 
 var camrot = Vector3()
 
@@ -53,6 +62,8 @@ func _ready():
 	set_process_input(true)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
+	bulletScene = load(\"res://Bullet.tscn\")
+	
 	torso_skeleton = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
 	torso_yaw_bone_transform = torso_skeleton.get_bone_pose(torso_yaw_bone_id)
@@ -61,6 +72,9 @@ func _ready():
 	
 	leftWeaponNode = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/LeftWeapon/Armature2\")
 	leftWeaponTransform = leftWeaponNode.global_transform
+	
+	rightWeaponNode = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/RightWeapon/Armature3\")
+	rightWeaponTransform = rightWeaponNode.global_transform
 	
 	animPlayer = get_node(\"Model/AnimationPlayer\")
 
@@ -82,6 +96,24 @@ func _physics_process(delta):
 		dir += Vector3(-1,0,0).rotated(Vector3(0,1,0), camrot.y)
 	if (Input.is_action_pressed(\"move_right\")):
 		dir += Vector3(1,0,0).rotated(Vector3(0,1,0), camrot.y)
+	if (rightWeaponCooldown <= 0.0):
+		if (Input.is_action_pressed(\"fire_right\")):
+			rightWeaponCooldown = rightWeaponFireRate
+			var node = bulletScene.instance()
+			node.set_transform(rightWeaponNode.global_transform)
+			get_tree().get_root().add_child(node)
+			print(\"BANG! right\")
+	else:
+		rightWeaponCooldown -= delta
+	if (leftWeaponCooldown <= 0.0):
+		if (Input.is_action_pressed(\"fire_left\")):
+			leftWeaponCooldown = leftWeaponFireRate
+			var node = bulletScene.instance()
+			node.set_transform(leftWeaponNode.global_transform)
+			get_tree().get_root().add_child(node)
+			print(\"BANG! left\")
+	else:
+		leftWeaponCooldown -= delta
 	
 	dir = dir.normalized()
 	
@@ -130,7 +162,7 @@ func _physics_process(delta):
 radius = 1.90303
 height = 2.81633
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 
 resource_name = "Idle"
 length = 0.0333333
@@ -228,7 +260,7 @@ tracks/12/imported = true
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 3.75852e-07, 5.96046e-08, 2.38419e-07, -7.47904e-09, 0.0871558, 2.9551e-08, 0.996195, 1, 1, 1, 0.0333333, 1, 3.75852e-07, 5.96046e-08, 2.38419e-07, -7.47904e-09, 0.0871558, 2.9551e-08, 0.996195, 1, 1, 1 )
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 
 resource_name = "TPose"
 length = 0.0333333
@@ -326,11 +358,10 @@ tracks/12/imported = true
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 1.16029e-07, 5.96046e-08, 1.19209e-07, 0, -2.9976e-15, -1.11022e-14, 1, 1, 1, 1, 0.0333333, 1, 1.16029e-07, 5.96046e-08, 1.19209e-07, 0, -2.9976e-15, -1.11022e-14, 1, 1, 1, 1 )
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=5]
 
-resource_name = "Walk"
 length = 1.35
-loop = false
+loop = true
 step = 0.1
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature")
@@ -424,7 +455,7 @@ tracks/12/imported = true
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 3.02406e-07, 1.19209e-07, 3.57628e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1, 0.0666667, 1, 3.35538e-07, 5.96046e-08, 1.19209e-07, 0.223485, 0.0427117, 0.00321995, 0.973766, 1, 1, 1, 0.133333, 1, 3.4296e-07, 1.19209e-07, 2.38419e-07, 0.20378, 0.0413061, 0.0131151, 0.978057, 1, 1, 1, 0.2, 1, -5.76256e-08, 1.19209e-07, 2.38419e-07, 0.191972, 0.0410951, 0.0142544, 0.980436, 1, 1, 1, 0.266667, 1, 2.81143e-07, 5.96046e-08, 3.57628e-07, 0.188036, 0.0415073, 0.0112024, 0.981221, 1, 1, 1, 0.333333, 1, 2.98798e-08, 0, 2.38419e-07, 0.173756, 0.0429509, 0.00760746, 0.983822, 1, 1, 1, 0.466667, 1, 2.53145e-07, 0, 1.19209e-07, -0.00907185, 0.0577114, 0.000507137, 0.998292, 1, 1, 1, 0.533333, 1, 1.85799e-07, 5.96046e-08, 2.38419e-07, -0.0510266, 0.0683555, -0.00450124, 0.996345, 1, 1, 1, 0.6, 1, -1.19558e-07, 5.96046e-08, 3.57628e-07, -0.0912565, 0.0810261, -0.00779087, 0.992495, 1, 1, 1, 0.666667, 1, 2.41269e-07, -1.19209e-07, 0, -0.129696, 0.0864681, -0.0109263, 0.987716, 1, 1, 1, 0.8, 1, 2.2375e-07, 1.19209e-07, 2.38419e-07, -0.213464, 0.085225, -0.0182923, 0.973055, 1, 1, 1, 0.866667, 1, 5.45872e-07, -5.96046e-08, 1.19209e-07, -0.229268, 0.084669, -0.021236, 0.969441, 1, 1, 1, 0.933333, 1, 4.98259e-08, -5.96046e-08, 2.38419e-07, -0.235494, 0.0844417, -0.0238649, 0.967906, 1, 1, 1, 1, 1, 3.57162e-07, 1.19209e-07, 0, -0.236275, 0.0836424, -0.0248102, 0.967762, 1, 1, 1, 1.06667, 1, 3.42727e-07, 0, 1.19209e-07, -0.161453, 0.066026, -0.0234513, 0.98439, 1, 1, 1, 1.13333, 1, 2.64496e-07, 0, 1.19209e-07, -0.0322391, 0.0448808, -0.0199283, 0.998273, 1, 1, 1, 1.2, 1, 4.13274e-07, 1.78814e-07, 3.57628e-07, 0.0880143, 0.0402841, -0.0142117, 0.995203, 1, 1, 1, 1.26667, 1, 6.54418e-08, 0, 0, 0.193334, 0.0423175, -0.00624026, 0.9802, 1, 1, 1, 1.33333, 1, 4.77494e-07, -5.96046e-08, 1.19209e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1, 1.35, 1, 4.77494e-07, -5.96046e-08, 1.19209e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1 )
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
@@ -499,62 +530,62 @@ bones/0/name = "Root"
 bones/0/parent = -1
 bones/0/rest = Transform( 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0 )
 bones/0/enabled = true
-bones/0/bound_childs = [  ]
+bones/0/bound_children = [  ]
 bones/1/name = "Waist"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, 2.38419e-07, -8.88178e-16, -2.38184e-07, 0.999015, 0.0443757, 1.058e-08, -0.0443757, 0.999015, 0, -0.699691, -3.77078 )
 bones/1/enabled = true
-bones/1/bound_childs = [ NodePath("TorsoAttach") ]
+bones/1/bound_children = [  ]
 bones/2/name = "waist.L"
 bones/2/parent = 1
 bones/2/rest = Transform( -2.37978e-07, -1.05708e-08, -1, 0.999015, 0.0443757, -2.38212e-07, 0.0443757, -0.999015, 6.35776e-16, -2.84217e-14, 1.19209e-07, 4.76837e-07 )
 bones/2/enabled = true
-bones/2/bound_childs = [  ]
+bones/2/bound_children = [  ]
 bones/3/name = "Uleg.L"
 bones/3/parent = 2
 bones/3/rest = Transform( 3.12924e-07, 0.767644, -0.640877, 2.38419e-07, 0.640877, 0.767644, 1, -4.02331e-07, -2.98023e-08, 5.96046e-08, 0, -1.50912 )
 bones/3/enabled = true
-bones/3/bound_childs = [  ]
+bones/3/bound_children = [  ]
 bones/4/name = "Mleg.L"
 bones/4/parent = 3
 bones/4/rest = Transform( -1, 1.21128e-07, 3.49343e-07, 3.69495e-07, 0.362205, 0.932099, -1.36299e-08, 0.932099, -0.362205, 0, 1.19209e-07, -1.83417 )
 bones/4/enabled = true
-bones/4/bound_childs = [  ]
+bones/4/bound_children = [  ]
 bones/5/name = "Lleg.L"
 bones/5/parent = 4
 bones/5/rest = Transform( -1, 3.97054e-07, 6.65327e-09, 6.11446e-08, 0.137398, 0.990516, 3.92374e-07, 0.990516, -0.137398, 1.19209e-07, 0, -1.25405 )
 bones/5/enabled = true
-bones/5/bound_childs = [  ]
+bones/5/bound_children = [  ]
 bones/6/name = "foot.L"
 bones/6/parent = 5
 bones/6/rest = Transform( -1, -3.47278e-07, 1.78814e-07, 3.90579e-07, -0.894787, 0.446493, 4.94318e-09, 0.446493, 0.894787, 2.38419e-07, -7.45058e-08, -1.67695 )
 bones/6/enabled = true
-bones/6/bound_childs = [  ]
+bones/6/bound_children = [  ]
 bones/7/name = "waist.R"
 bones/7/parent = 1
 bones/7/rest = Transform( 2.37977e-07, -1.05708e-08, 1, -0.999015, 0.0443757, 2.38212e-07, -0.0443757, -0.999015, -6.35776e-16, -2.84217e-14, 1.19209e-07, 4.76837e-07 )
 bones/7/enabled = true
-bones/7/bound_childs = [  ]
+bones/7/bound_children = [  ]
 bones/8/name = "Uleg.R"
 bones/8/parent = 7
 bones/8/rest = Transform( 3.12924e-07, -0.767644, 0.640877, -2.38419e-07, 0.640877, 0.767644, -1, -4.02331e-07, -2.98023e-08, -5.96046e-08, 0, -1.50912 )
 bones/8/enabled = true
-bones/8/bound_childs = [  ]
+bones/8/bound_children = [  ]
 bones/9/name = "Mleg.R"
 bones/9/parent = 8
 bones/9/rest = Transform( -1, -1.21128e-07, -3.49343e-07, -3.69495e-07, 0.362205, 0.932099, 1.36299e-08, 0.932099, -0.362205, 0, 1.19209e-07, -1.83417 )
 bones/9/enabled = true
-bones/9/bound_childs = [  ]
+bones/9/bound_children = [  ]
 bones/10/name = "Lleg.R"
 bones/10/parent = 9
 bones/10/rest = Transform( -1, -3.97054e-07, -6.65326e-09, -6.11446e-08, 0.137398, 0.990516, -3.92374e-07, 0.990516, -0.137398, -1.19209e-07, 0, -1.25405 )
 bones/10/enabled = true
-bones/10/bound_childs = [  ]
+bones/10/bound_children = [  ]
 bones/11/name = "foot.R"
 bones/11/parent = 10
 bones/11/rest = Transform( -1, 3.47278e-07, -1.78814e-07, -3.90579e-07, -0.894787, 0.446493, -4.94318e-09, 0.446493, 0.894787, -2.38419e-07, -7.45058e-08, -1.67695 )
 bones/11/enabled = true
-bones/11/bound_childs = [  ]
+bones/11/bound_children = [  ]
 
 [node name="MeshInstance" type="MeshInstance" parent="Model/Armature/Skeleton" index="0"]
 
@@ -574,7 +605,7 @@ _sections_unfolded = [ "material" ]
 
 [node name="TorsoAttach" type="BoneAttachment" parent="Model/Armature/Skeleton" index="1"]
 
-transform = Transform( 1, 2.38419e-07, -4.44089e-16, -1.058e-08, 0.0443757, -0.999015, -2.38184e-07, 0.999015, 0.0443757, -1.90582e-21, 3.77078, -0.69969 )
+transform = Transform( 1, 2.38419e-07, -8.88178e-16, -1.058e-08, 0.0443757, -0.999015, -2.38184e-07, 0.999015, 0.0443757, 0, 3.77078, -0.699691 )
 bone_name = "Waist"
 
 [node name="Armature1" type="Spatial" parent="Model/Armature/Skeleton/TorsoAttach" index="0"]
@@ -588,22 +619,22 @@ bones/0/name = "Yaw"
 bones/0/parent = -1
 bones/0/rest = Transform( 1, 2.38419e-07, 0, 3.38813e-21, 1.19209e-07, -1, -2.38419e-07, 1, 0, -2.10321e-12, 4.28024, -0.7272 )
 bones/0/enabled = true
-bones/0/bound_childs = [  ]
+bones/0/bound_children = [  ]
 bones/1/name = "Pitch"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, -2.38419e-07, 0, 2.38419e-07, 1, 0, 1.69407e-21, 0, 1, -1.42109e-14, 0, -0.497981 )
 bones/1/enabled = true
-bones/1/bound_childs = [  ]
+bones/1/bound_children = [  ]
 bones/2/name = "armW.R"
 bones/2/parent = 1
 bones/2/rest = Transform( 0, 0, 1, -1, 7.54979e-08, 0, -7.54979e-08, -1, -2.01948e-28, -0.992361, -0.409376, -0.940294 )
 bones/2/enabled = true
-bones/2/bound_childs = [ NodePath("RightWeapon") ]
+bones/2/bound_children = [  ]
 bones/3/name = "armW.L"
 bones/3/parent = 1
 bones/3/rest = Transform( 0, 0, -1, 1, 7.54979e-08, 0, 7.54979e-08, -1, 2.01948e-28, 0.992361, -0.409376, -0.940294 )
 bones/3/enabled = true
-bones/3/bound_childs = [ NodePath("LeftWeapon") ]
+bones/3/bound_children = [  ]
 
 [node name="Plane1" type="MeshInstance" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="0"]
 
@@ -623,7 +654,7 @@ _sections_unfolded = [ "material" ]
 
 [node name="LeftWeapon" type="BoneAttachment" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="1"]
 
-transform = Transform( -1.42109e-14, -1.07289e-21, -1, 4.37114e-08, 1, -2.84217e-14, 1, 7.54979e-08, 1.42109e-14, 0.992361, 5.71852, -1.13658 )
+transform = Transform( 0, 0, -1, 4.37111e-08, 1, -2.84217e-14, 1, 7.54979e-08, 0, 0.992361, 5.71851, -1.13658 )
 bone_name = "armW.L"
 
 [node name="Armature2" type="Spatial" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/LeftWeapon" index="0"]
@@ -637,12 +668,12 @@ bones/0/name = "Control"
 bones/0/parent = -1
 bones/0/rest = Transform( 0, 0, -1, 0, 1, 0, 1, 0, 0, -0.000307322, 0, -0.000715375 )
 bones/0/enabled = true
-bones/0/bound_childs = [  ]
+bones/0/bound_children = [  ]
 bones/1/name = "Fire"
 bones/1/parent = 0
 bones/1/rest = Transform( 0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -0.77859 )
 bones/1/enabled = true
-bones/1/bound_childs = [  ]
+bones/1/bound_children = [  ]
 
 [node name="Plane2" type="MeshInstance" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/LeftWeapon/Armature2/Skeleton" index="0"]
 
@@ -663,7 +694,7 @@ _sections_unfolded = [ "Transform", "material" ]
 
 [node name="RightWeapon" type="BoneAttachment" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="2"]
 
-transform = Transform( 1.42109e-14, -1.07289e-21, 1, -4.37114e-08, 1, 2.84217e-14, -1, 7.54979e-08, -1.42109e-14, -0.992361, 5.71852, -1.13658 )
+transform = Transform( 0, 0, 1, -4.37111e-08, 1, 2.84217e-14, -1, 7.54979e-08, 0, -0.992361, 5.71851, -1.13658 )
 bone_name = "armW.R"
 
 [node name="Armature3" type="Spatial" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/RightWeapon" index="0"]
@@ -676,7 +707,7 @@ bones/0/name = "armW.R.001"
 bones/0/parent = -1
 bones/0/rest = Transform( 1.19209e-07, 0, 1, 0, 1, 0, -1, 0, 0, -1.7587, 5.71852, -1.13658 )
 bones/0/enabled = true
-bones/0/bound_childs = [  ]
+bones/0/bound_children = [  ]
 
 [node name="MeshInstance" type="MeshInstance" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton/RightWeapon/Armature3/Skeleton" index="0"]
 
@@ -691,7 +722,8 @@ lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
 mesh = ExtResource( 7 )
 skeleton = NodePath("..")
-material/0 = null
+material/0 = ExtResource( 6 )
+_sections_unfolded = [ "material" ]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Model" index="1"]
 
@@ -700,10 +732,9 @@ autoplay = ""
 playback_process_mode = 1
 playback_default_blend_time = 0.0
 playback_speed = 1.0
-anims/Idle = SubResource( 4 )
-anims/TPose = SubResource( 5 )
-anims/Walk = SubResource( 3 )
+anims/Idle = SubResource( 3 )
+anims/TPose = SubResource( 4 )
+anims/Walk = SubResource( 5 )
 blend_times = [  ]
-autoplay = ""
 
 
