@@ -11,21 +11,30 @@ script/source = "extends Spatial
 # var b = \"textvar\"
 var ttl = 12.0
 var rayNode
-var speed = 10
+var vel = Vector3(0,0,90)
+var grav
+var parent_vel = Vector3(0,0,0)
+
+func init():
+	grav = to_local(Vector3(0,-9.8,0)) - to_local(Vector3(0,0,0))
+	vel += to_local(parent_vel) - to_local(Vector3(0,0,0))
 
 func _ready():
 	rayNode = get_node(\"RayCast\")
+	init()
 
 func _process(delta):
-	rayNode.cast_to = Vector3(0,0,delta*speed)
+	rayNode.cast_to = vel*delta
 	rayNode.force_raycast_update()
 	if (rayNode.is_colliding()):
 		free()
 		return
-	translate(Vector3(0,0,delta*speed))
+	translate(vel*delta)
 	ttl -= delta
 	if (ttl <= 0.0):
 		free()
+		return
+	vel += grav*delta
 "
 
 [sub_resource type="SpatialMaterial" id=2]
@@ -85,7 +94,7 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Emission" ]
 
-[node name="Spatial" type="Spatial" index="0"]
+[node name="Spatial" type="Spatial"]
 
 script = SubResource( 1 )
 
