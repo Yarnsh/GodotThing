@@ -7,10 +7,10 @@ path="res://.import/Mecha1.dae-9a715931bfc3c6adf8dd4b595d6a56c2.scn"
 [deps]
 
 source_file="res://Mecha1/Mecha1.dae"
-source_md5="9670892aa81f9a756a38346c5146e997"
+source_md5="7013001c6ba90c2e1b45224b289608ba"
 
 dest_files=[ "res://.import/Mecha1.dae-9a715931bfc3c6adf8dd4b595d6a56c2.scn" ]
-dest_md5="f510deb3c831550e5eeb0a8162cca5ce"
+dest_md5="5c106658793df69fb1e538556f458e2f"
 
 [params]
 
@@ -24,7 +24,7 @@ materials/storage=1
 materials/keep_on_reimport=true
 meshes/compress=true
 meshes/ensure_tangents=true
-meshes/storage=0
+meshes/storage=1
 meshes/light_baking=0
 meshes/lightmap_texel_size=0.1
 external_files/store_in_subdir=false
