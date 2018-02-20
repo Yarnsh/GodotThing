@@ -50,7 +50,7 @@ disabled = false
 
 [node name="KinematicBody" parent="." index="1" instance=ExtResource( 1 )]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.36872, 166.82 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -352.568, 22.4872, 495.763 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="." index="2"]
 

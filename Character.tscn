@@ -133,14 +133,17 @@ func _physics_process(delta):
 	
 	was_on_floor = false
 	if (is_on_floor() or my_is_on_floor):
+		if (my_is_on_floor):
+			print(dir)
 		my_is_on_floor = true
 		was_on_floor = true
-		var speed_check = Vector3(vel.x,0,vel.z).length()
+		var speed_check = vel.length()
 		if (speed_check <= speedLimit):
 			vel += dir*accelspeed*delta
-		var speed = max(0.0, Vector3(vel.x,0,vel.z).length() - deaccelspeed * delta)
-		var hvel = Vector3(vel.x, 0, vel.z).normalized() * speed
-		vel = Vector3(hvel.x, vel.y, hvel.z)
+		var speed = max(0.0, vel.length() - deaccelspeed * delta)
+		#var hvel = Vector3(vel.x, 0, vel.z).normalized() * speed
+		#vel = Vector3(hvel.x, vel.y, hvel.z)
+		vel = vel.normalized()*speed
 	
 	if (Input.is_action_pressed(\"jump\")):
 		vel += Vector3(0,3.0*delta,0)
@@ -179,7 +182,7 @@ func _physics_process(delta):
 	else:
 		floorNormal = Vector3(0,1,0)
 	
-	if (was_on_floor):
+	if (!is_on_floor() and was_on_floor):
 		floorStickRay.force_raycast_update()
 		if (floorStickRay.is_colliding()):
 			if (floorStickRay.get_collision_normal().angle_to(Vector3(0,1,0)) <= 0.785398):
