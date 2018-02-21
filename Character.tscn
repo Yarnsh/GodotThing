@@ -12,6 +12,8 @@
 
 script/source = "extends KinematicBody
 
+var id = -1
+
 var camspeed = 0.005
 var accelspeed = 200
 var rotspeed = 0.05
@@ -52,6 +54,8 @@ var floorNormal = Vector3(0,1,0)
 var was_on_floor = false
 var my_is_on_floor = false
 
+func getId():
+	return id
 
 func closerDirVector(start, end, amount): #takes unit vectors only
 	var axis = start.cross(end)
@@ -62,6 +66,8 @@ func closerDirVector(start, end, amount): #takes unit vectors only
 	return endQ.xform(start)
 
 func _ready():
+	id = global.getId()
+	
 	set_process_input(true)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
@@ -133,16 +139,12 @@ func _physics_process(delta):
 	
 	was_on_floor = false
 	if (is_on_floor() or my_is_on_floor):
-		if (my_is_on_floor):
-			print(dir)
 		my_is_on_floor = true
 		was_on_floor = true
 		var speed_check = vel.length()
 		if (speed_check <= speedLimit):
 			vel += dir*accelspeed*delta
 		var speed = max(0.0, vel.length() - deaccelspeed * delta)
-		#var hvel = Vector3(vel.x, 0, vel.z).normalized() * speed
-		#vel = Vector3(hvel.x, vel.y, hvel.z)
 		vel = vel.normalized()*speed
 	
 	if (Input.is_action_pressed(\"jump\")):
@@ -155,6 +157,7 @@ func _physics_process(delta):
 			rightWeaponCooldown = rightWeaponFireRate
 			var node = bulletScene.instance()
 			node.parent_vel = vel
+			node.shooter_id = id
 			node.set_transform(rightWeaponNode.global_transform)
 			get_tree().get_root().add_child(node)
 	else:
@@ -164,6 +167,7 @@ func _physics_process(delta):
 			leftWeaponCooldown = leftWeaponFireRate
 			var node = bulletScene.instance()
 			node.parent_vel = vel
+			node.shooter_id = id
 			node.set_transform(leftWeaponNode.global_transform)
 			get_tree().get_root().add_child(node)
 	else:
@@ -488,12 +492,12 @@ tracks/12/imported = true
 tracks/12/enabled = true
 tracks/12/keys = PoolRealArray( 0, 1, 3.02406e-07, 1.19209e-07, 3.57628e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1, 0.0666667, 1, 3.35538e-07, 5.96046e-08, 1.19209e-07, 0.223485, 0.0427117, 0.00321995, 0.973766, 1, 1, 1, 0.133333, 1, 3.4296e-07, 1.19209e-07, 2.38419e-07, 0.20378, 0.0413061, 0.0131151, 0.978057, 1, 1, 1, 0.2, 1, -5.76256e-08, 1.19209e-07, 2.38419e-07, 0.191972, 0.0410951, 0.0142544, 0.980436, 1, 1, 1, 0.266667, 1, 2.81143e-07, 5.96046e-08, 3.57628e-07, 0.188036, 0.0415073, 0.0112024, 0.981221, 1, 1, 1, 0.333333, 1, 2.98798e-08, 0, 2.38419e-07, 0.173756, 0.0429509, 0.00760746, 0.983822, 1, 1, 1, 0.466667, 1, 2.53145e-07, 0, 1.19209e-07, -0.00907185, 0.0577114, 0.000507137, 0.998292, 1, 1, 1, 0.533333, 1, 1.85799e-07, 5.96046e-08, 2.38419e-07, -0.0510266, 0.0683555, -0.00450124, 0.996345, 1, 1, 1, 0.6, 1, -1.19558e-07, 5.96046e-08, 3.57628e-07, -0.0912565, 0.0810261, -0.00779087, 0.992495, 1, 1, 1, 0.666667, 1, 2.41269e-07, -1.19209e-07, 0, -0.129696, 0.0864681, -0.0109263, 0.987716, 1, 1, 1, 0.8, 1, 2.2375e-07, 1.19209e-07, 2.38419e-07, -0.213464, 0.085225, -0.0182923, 0.973055, 1, 1, 1, 0.866667, 1, 5.45872e-07, -5.96046e-08, 1.19209e-07, -0.229268, 0.084669, -0.021236, 0.969441, 1, 1, 1, 0.933333, 1, 4.98259e-08, -5.96046e-08, 2.38419e-07, -0.235494, 0.0844417, -0.0238649, 0.967906, 1, 1, 1, 1, 1, 3.57162e-07, 1.19209e-07, 0, -0.236275, 0.0836424, -0.0248102, 0.967762, 1, 1, 1, 1.06667, 1, 3.42727e-07, 0, 1.19209e-07, -0.161453, 0.066026, -0.0234513, 0.98439, 1, 1, 1, 1.13333, 1, 2.64496e-07, 0, 1.19209e-07, -0.0322391, 0.0448808, -0.0199283, 0.998273, 1, 1, 1, 1.2, 1, 4.13274e-07, 1.78814e-07, 3.57628e-07, 0.0880143, 0.0402841, -0.0142117, 0.995203, 1, 1, 1, 1.26667, 1, 6.54418e-08, 0, 0, 0.193334, 0.0423175, -0.00624026, 0.9802, 1, 1, 1, 1.33333, 1, 4.77494e-07, -5.96046e-08, 1.19209e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1, 1.35, 1, 4.77494e-07, -5.96046e-08, 1.19209e-07, 0.232531, 0.0435388, -0.00265058, 0.97161, 1, 1, 1 )
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
 input_capture_on_drag = false
-collision_layer = 1
+collision_layer = 2
 collision_mask = 1
 axis_lock_linear_x = false
 axis_lock_linear_y = false
@@ -539,7 +543,7 @@ current = false
 fov = 85.0
 size = 1.0
 near = 1.0
-far = 1000.0
+far = 2000.0
 _sections_unfolded = [ "Transform" ]
 
 [node name="RayCast" type="RayCast" parent="CameraSpatial/ViewRay/Camera" index="0"]
@@ -568,7 +572,7 @@ bones/1/name = "Waist"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, 2.38419e-07, -8.88178e-16, -2.38184e-07, 0.999015, 0.0443757, 1.058e-08, -0.0443757, 0.999015, 0, -0.699691, -3.77078 )
 bones/1/enabled = true
-bones/1/bound_children = [ NodePath("TorsoAttach") ]
+bones/1/bound_children = [  ]
 bones/2/name = "waist.L"
 bones/2/parent = 1
 bones/2/rest = Transform( -2.37978e-07, -1.05708e-08, -1, 0.999015, 0.0443757, -2.38212e-07, 0.0443757, -0.999015, 6.35776e-16, -2.84217e-14, 1.19209e-07, 4.76837e-07 )
@@ -662,12 +666,12 @@ bones/2/name = "armW.R"
 bones/2/parent = 1
 bones/2/rest = Transform( 0, 0, 1, -1, 7.54979e-08, 0, -7.54979e-08, -1, -2.01948e-28, -0.992361, -0.409376, -0.940294 )
 bones/2/enabled = true
-bones/2/bound_children = [ NodePath("RightWeapon") ]
+bones/2/bound_children = [  ]
 bones/3/name = "armW.L"
 bones/3/parent = 1
 bones/3/rest = Transform( 0, 0, -1, 1, 7.54979e-08, 0, 7.54979e-08, -1, 2.01948e-28, 0.992361, -0.409376, -0.940294 )
 bones/3/enabled = true
-bones/3/bound_children = [ NodePath("LeftWeapon") ]
+bones/3/bound_children = [  ]
 
 [node name="Plane1" type="MeshInstance" parent="Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton" index="0"]
 

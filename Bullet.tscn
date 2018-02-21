@@ -6,9 +6,8 @@
 
 script/source = "extends Spatial
 
-# class member variables go here, for example:
-# var a = 2
-# var b = \"textvar\"
+var shooter_id = -1
+
 var ttl = 12.0
 var rayNode
 var vel = Vector3(0,0,-90)
@@ -27,8 +26,15 @@ func _process(delta):
 	rayNode.cast_to = vel*delta
 	rayNode.force_raycast_update()
 	if (rayNode.is_colliding()):
-		free()
-		return
+		var node = rayNode.get_collider()
+		if (shooter_id < 0 or !node.has_method(\"getId\") or node.getId() != shooter_id):
+			var splash = global.particles.instance()
+			get_tree().get_root().add_child(splash)
+			splash.look_at(-rayNode.get_collision_normal(), Vector3(0,1,0))
+			splash.global_translate(rayNode.get_collision_point())
+			splash.set_emitting(true)
+			free()
+			return
 	translate(vel*delta)
 	ttl -= delta
 	if (ttl <= 0.0):

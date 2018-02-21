@@ -51,6 +51,7 @@ disabled = false
 [node name="KinematicBody" parent="." index="1" instance=ExtResource( 1 )]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -352.568, 22.4872, 495.763 )
+collision_layer = 1
 
 [node name="DirectionalLight" type="DirectionalLight" parent="." index="2"]
 
