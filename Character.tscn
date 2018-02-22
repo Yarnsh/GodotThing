@@ -71,7 +71,7 @@ func _ready():
 	set_process_input(true)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	bulletScene = load(\"res://Bullet.tscn\")
+	bulletScene = preload(\"res://Bullet.tscn\")
 	
 	torso_skeleton = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
