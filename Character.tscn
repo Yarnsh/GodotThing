@@ -21,8 +21,6 @@ var deaccelspeed = 120
 var vel = Vector3()
 var speedLimit = 15
 
-var bulletScene
-
 var torso_skeleton
 
 var torso_yaw_bone_id = 0
@@ -70,8 +68,6 @@ func _ready():
 	
 	set_process_input(true)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	
-	bulletScene = preload(\"res://Bullet.tscn\")
 	
 	torso_skeleton = get_node(\"Model/Armature/Skeleton/TorsoAttach/Armature1/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
@@ -155,7 +151,7 @@ func _physics_process(delta):
 	if (rightWeaponCooldown <= 0.0):
 		if (Input.is_action_pressed(\"fire_right\")):
 			rightWeaponCooldown = rightWeaponFireRate
-			var node = bulletScene.instance()
+			var node = global.bulletScene.instance()
 			node.parent_vel = vel
 			node.shooter_id = id
 			node.set_transform(rightWeaponNode.global_transform)
@@ -165,7 +161,7 @@ func _physics_process(delta):
 	if (leftWeaponCooldown <= 0.0):
 		if (Input.is_action_pressed(\"fire_left\")):
 			leftWeaponCooldown = leftWeaponFireRate
-			var node = bulletScene.instance()
+			var node = global.bulletScene.instance()
 			node.parent_vel = vel
 			node.shooter_id = id
 			node.set_transform(leftWeaponNode.global_transform)

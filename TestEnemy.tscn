@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Mecha1/Mecha1/Mecha1_Legs.mesh" type="ArrayMesh" id=1]
+
+[sub_resource type="GDScript" id=2]
+
+script/source = "extends KinematicBody
+
+var vel = Vector3()
+var grav = Vector3(0,-9.8,0)
+
+var health = 5
+
+func _ready():
+	# Called every time the node is added to the scene.
+	# Initialization here
+	pass
+
+func _physics_process(delta):
+	vel += grav*delta
+	vel = move_and_slide(vel,Vector3(0,1,0))
+
+func takeHit():
+	health -= 1
+	if (health <= 0):
+		queue_free()"
+
+[sub_resource type="CapsuleShape" id=1]
+
+radius = 1.82576
+height = 0.817128
+
+[node name="KinematicBody" type="KinematicBody" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 1
+collision_mask = 1
+axis_lock_linear_x = false
+axis_lock_linear_y = false
+axis_lock_linear_z = false
+axis_lock_angular_x = false
+axis_lock_angular_y = false
+axis_lock_angular_z = false
+collision/safe_margin = 0.001
+script = SubResource( 2 )
+_sections_unfolded = [ "Collision", "collision" ]
+
+[node name="MeshInstance" type="MeshInstance" parent="." index="0"]
+
+layers = 1
+material_override = null
+cast_shadow = 1
+extra_cull_margin = 0.0
+use_in_baked_light = false
+lod_min_distance = 0.0
+lod_min_hysteresis = 0.0
+lod_max_distance = 0.0
+lod_max_hysteresis = 0.0
+mesh = ExtResource( 1 )
+skeleton = NodePath("..")
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="." index="1"]
+
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.2336, 0 )
+shape = SubResource( 1 )
+disabled = false
+_sections_unfolded = [ "Transform" ]
+
+

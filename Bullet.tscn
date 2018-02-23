@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://tlwikitwitter_400x400.jpg" type="Texture" id=1]
+[ext_resource path="res://flash.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 
@@ -33,6 +33,10 @@ func _process(delta):
 			splash.look_at(-rayNode.get_collision_normal(), Vector3(0,1,0))
 			splash.global_translate(rayNode.get_collision_point())
 			splash.set_emitting(true)
+			
+			if (node.has_method(\"takeHit\")):
+				node.takeHit();
+			
 			free()
 			return
 	translate(vel*delta)
@@ -46,8 +50,8 @@ func _process(delta):
 [sub_resource type="SpatialMaterial" id=2]
 
 render_priority = 0
-flags_transparent = false
-flags_unshaded = false
+flags_transparent = true
+flags_unshaded = true
 flags_vertex_lighting = false
 flags_no_depth_test = false
 flags_use_point_size = false
@@ -74,10 +78,9 @@ roughness = 0.0
 roughness_texture_channel = 0
 emission_enabled = true
 emission = Color( 1, 0.984375, 0, 1 )
-emission_energy = 0.5
+emission_energy = 1.0
 emission_operator = 0
 emission_on_uv2 = false
-emission_texture = ExtResource( 1 )
 normal_enabled = false
 rim_enabled = false
 clearcoat_enabled = false
@@ -98,7 +101,7 @@ uv2_triplanar = false
 uv2_triplanar_sharpness = 1.0
 proximity_fade_enable = false
 distance_fade_enable = false
-_sections_unfolded = [ "Emission" ]
+_sections_unfolded = [ "Albedo", "Emission", "Flags", "Parameters", "Vertex Color" ]
 
 [node name="Spatial" type="Spatial"]
 
@@ -121,7 +124,7 @@ flip_h = false
 flip_v = false
 modulate = Color( 1, 1, 1, 1 )
 opacity = 1.0
-pixel_size = 0.01
+pixel_size = 0.05
 axis = 2
 transparent = true
 shaded = false
@@ -133,7 +136,7 @@ hframes = 1
 frame = 0
 region_enabled = false
 region_rect = Rect2( 0, 0, 0, 0 )
-_sections_unfolded = [ "Geometry", "Visibility" ]
+_sections_unfolded = [ "Geometry", "Transform", "Visibility" ]
 
 [node name="RayCast" type="RayCast" parent="." index="1"]
 

@@ -4,6 +4,8 @@ var id_lock = Mutex.new()
 var next_id = 0
 
 var particles
+var bulletScene
+var mainScene
 
 func getId():
 	id_lock.lock()
@@ -14,3 +16,4 @@ func getId():
 
 func _ready():
 	particles = preload("res://Particles.tscn")
+	bulletScene = preload("res://Bullet.tscn")
