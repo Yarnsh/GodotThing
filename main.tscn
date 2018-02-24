@@ -35,7 +35,7 @@ func takeHit():
 
 [node name="Player" parent="." index="0" instance=ExtResource( 1 )]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -352.568, 22.4872, -1379.28 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -352.568, 22.4872, 312.764 )
 collision_layer = 1
 
 [node name="DirectionalLight" type="DirectionalLight" parent="." index="1"]
@@ -67,6 +67,8 @@ directional_shadow_max_distance = 200.0
 _sections_unfolded = [ "Directional Shadow", "Light", "Shadow" ]
 
 [node name="Terrain" parent="." index="2" instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52652, 1.31018, 1.94702 )
 
 [node name="KinematicBody2" parent="." index="3" instance=ExtResource( 3 )]
 
