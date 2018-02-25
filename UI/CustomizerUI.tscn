@@ -1,0 +1,178 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends MarginContainer
+
+signal exited_menu
+
+onready var lwep = $VBoxContainer/LWEP
+var lweppop
+onready var rwep = $VBoxContainer/RWEP
+var rweppop
+onready var save = $VBoxContainer/CenterContainer/Button
+
+var lwep_selection = \"NONE\"
+var rwep_selection = \"NONE\"
+
+func _ready():
+	lwep.text = \"LWEP: \" + lwep_selection
+	lweppop = lwep.get_popup()
+	lweppop.add_item(\"NONE\")
+	lweppop.add_item(\"Gattling Gun\")
+	lweppop.add_item(\"Howitzer\")
+	lweppop.connect(\"id_pressed\", self, \"_on_lwep_pressed\")
+	
+	rwep.text = \"RWEP: \" + rwep_selection
+	rweppop = rwep.get_popup()
+	rweppop.add_item(\"NONE\")
+	rweppop.add_item(\"Gattling Gun\")
+	rweppop.add_item(\"Howitzer\")
+	rweppop.connect(\"id_pressed\", self, \"_on_rwep_pressed\")
+	
+	save.connect(\"button_down\", self, \"_on_save_pressed\")
+
+func _on_lwep_pressed(ID):
+	lwep_selection = lweppop.get_item_text(ID)
+	lwep.text = \"LWEP: \" + lwep_selection
+
+func _on_rwep_pressed(ID):
+	rwep_selection = rweppop.get_item_text(ID)
+	rwep.text = \"RWEP: \" + rwep_selection
+
+func _on_save_pressed():
+	if (rwep_selection == \"Gattling Gun\"):
+		global.rWepPart = \"res://Things/Weapons/STANDARD_gattlinggun.dae\"
+	else: if (rwep_selection == \"Howitzer\"):
+		global.rWepPart = \"res://Things/Weapons/STANDARD_howitzer.dae\"
+	else:
+		global.rWepPart = \"NONE\"
+	
+	if (lwep_selection == \"Gattling Gun\"):
+		global.lWepPart = \"res://Things/Weapons/STANDARD_gattlinggun.dae\"
+	else: if (lwep_selection == \"Howitzer\"):
+		global.lWepPart = \"res://Things/Weapons/STANDARD_howitzer.dae\"
+	else:
+		global.lWepPart = \"NONE\"
+	
+	hide()
+	get_node(\"..\").emit_signal(\"exited_menu\")"
+
+[node name="MarginContainer" type="MarginContainer"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 486.0
+margin_bottom = 508.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 8.0
+margin_right = 486.0
+margin_bottom = 508.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="LWEP" type="MenuButton" parent="VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 478.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "LWEP:"
+flat = false
+align = 1
+items = [  ]
+
+[node name="RWEP" type="MenuButton" parent="VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 24.0
+margin_right = 478.0
+margin_bottom = 44.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "RWEP:"
+flat = false
+align = 1
+items = [  ]
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 48.0
+margin_right = 478.0
+margin_bottom = 68.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+use_top_left = false
+
+[node name="Button" type="Button" parent="VBoxContainer/CenterContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 217.0
+margin_right = 260.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "SAVE"
+flat = false
+align = 1
+
+

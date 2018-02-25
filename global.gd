@@ -7,6 +7,11 @@ var particles
 var bulletScene
 var currentNav
 
+var bodyPart = "res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"
+var legPart = "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"
+var lWepPart = "NONE"
+var rWepPart = "NONE"
+
 func getId():
 	id_lock.lock()
 	var ret_id = next_id
