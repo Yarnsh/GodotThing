@@ -54,6 +54,10 @@ var floorNormal = Vector3(0,1,0)
 var was_on_floor = false
 var my_is_on_floor = false
 
+var camera_y = 0.0
+var camera_x = 0.0
+var camera_ray_colliding = false
+var camera_ray_point = Vector3(0,0,0)
 
 func getId():
 	return id
@@ -115,6 +119,13 @@ func _physics_process(delta):
 	else:
 		get_node(\"CameraSpatial/ViewRay/Camera\").translation = Vector3(0,0,0)
 	
+	if (!Input.is_action_pressed(\"free_look\")):
+		camera_y = get_node(\"CameraSpatial\").rotation.y
+		camera_x = get_node(\"CameraSpatial\").rotation.x
+		camera_ray_colliding = get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").is_colliding()
+		if (camera_ray_colliding):
+			camera_ray_point = get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point()
+	
 	if (dir.length_squared() > 0.0):
 		#if (!animPlayer.is_playing()): animPlayer.play(\"Walk\")
 		if (currentfacing.length_squared() > 0.0):
@@ -123,17 +134,17 @@ func _physics_process(delta):
 		pass#animPlayer.play(\"Idle\")
 	get_node(\"CameraSpatial\").rotation = camrot - Vector3(0.0, rotation.y, 0.0)
 	
-	yaw_torso_facing = closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), get_node(\"CameraSpatial\").rotation.y), torso_yawspeed)
-	var limited_pitch = max(get_node(\"CameraSpatial\").rotation.x, -pitch_limit)
+	yaw_torso_facing = closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y), torso_yawspeed)
+	var limited_pitch = max(camera_x, -pitch_limit)
 	limited_pitch = min(limited_pitch, pitch_limit)
 	pitch_torso_facing = closerDirVector(pitch_torso_facing, Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch), torso_pitchspeed)
 	
 	torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 	torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
 	
-	if (get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").is_colliding()):
-		leftWeaponNode.look_at(get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point(), Vector3(0,1,0));
-		rightWeaponNode.look_at(get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point(), Vector3(0,1,0));
+	if (camera_ray_colliding):
+		leftWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
+		rightWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
 	
 	was_on_floor = false
 	if (is_on_floor() or my_is_on_floor):
