@@ -7,7 +7,7 @@ path="res://.import/ADAMmk2_legs.dae-1bde67fb4d9cf4a0b73e94a22101b604.scn"
 [deps]
 
 source_file="res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"
-source_md5="15dad52a198a512111fd9ca95bf40c8b"
+source_md5="46862703286c700de742d316a09263e1"
 
 dest_files=[ "res://.import/ADAMmk2_legs.dae-1bde67fb4d9cf4a0b73e94a22101b604.scn" ]
 dest_md5="ed9fdbb36b691c987d83d01c185c3d0b"

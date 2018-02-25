@@ -7,10 +7,10 @@ path="res://.import/ADAMmk2_body.dae-07b05750b6a1c070ad3c7e8e9897bcae.scn"
 [deps]
 
 source_file="res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"
-source_md5="2c6aee674793eccf59d2efa4f310347a"
+source_md5="97cbe463370852bc19818748c30a413b"
 
 dest_files=[ "res://.import/ADAMmk2_body.dae-07b05750b6a1c070ad3c7e8e9897bcae.scn" ]
-dest_md5="ed3a76ef1d2b8702183c860929319acf"
+dest_md5="3b3a005a01310293aac2144bd685884f"
 
 [params]
 
