@@ -7,10 +7,10 @@ path="res://.import/STANDARD_howitzer.dae-03463200242b7e5d058d5ef79b750976.scn"
 [deps]
 
 source_file="res://Things/Weapons/STANDARD_howitzer.dae"
-source_md5="cb98634c83757f611402d3c87ce3331d"
+source_md5="90e8e6f1cb27feb74738b1e3e2bdc4f5"
 
 dest_files=[ "res://.import/STANDARD_howitzer.dae-03463200242b7e5d058d5ef79b750976.scn" ]
-dest_md5="5ba4ada04d99abce8261daa18ddc5cfe"
+dest_md5="6e35217b9edbaf2f62ff723d23dacd2d"
 
 [params]
 

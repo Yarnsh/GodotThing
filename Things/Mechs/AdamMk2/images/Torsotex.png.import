@@ -2,31 +2,32 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.stex"
+path.s3tc="res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.s3tc.stex"
+path.etc2="res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.etc2.stex"
 
 [deps]
 
 source_file="res://Things/Mechs/AdamMk2/images/Torsotex.png"
 source_md5="390397b117a0766c97945d457e1c3ca1"
 
-dest_files=[ "res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.stex" ]
-dest_md5="d93ea64966f4f2113cf44d8877dc53af"
+dest_files=[ "res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.s3tc.stex", "res://.import/Torsotex.png-7d5d93fdb6fe6c6d88648101e0267eab.etc2.stex" ]
+dest_md5="effbb71142e300f42e5867b8d4a53a75"
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/normal_map=0
-flags/repeat=0
+flags/repeat=true
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
-flags/srgb=2
+flags/srgb=1
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0

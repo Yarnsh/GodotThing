@@ -78,10 +78,10 @@ func _ready():
 	torso_pitch_bone_id = torso_skeleton.find_bone(\"Pitch\")
 	torso_pitch_bone_transform = torso_skeleton.get_bone_pose(torso_pitch_bone_id)
 	
-	leftWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon/Scene Root\")
+	leftWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon/Spatial\")
 	leftWeaponTransform = leftWeaponNode.global_transform
 	
-	rightWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon/Scene Root\")
+	rightWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon/Spatial\")
 	rightWeaponTransform = rightWeaponNode.global_transform
 	
 	floorStickRay = get_node(\"Model/FloorStickRay\")
@@ -303,19 +303,26 @@ _sections_unfolded = [ "bones", "bones/2", "bones/3" ]
 
 [node name="LeftWeapon" type="BoneAttachment" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton" index="1"]
 
-transform = Transform( 1, -1.50996e-07, 3.89414e-07, 1.50996e-07, 1, 5.96484e-08, -3.89414e-07, -1.19297e-07, 1, -1.7536, 1.4403, 1.13658 )
+transform = Transform( 1, -8.74228e-08, 3.89414e-07, 8.74228e-08, 1, 0, -3.89414e-07, 3.40437e-14, 1, -1.7536, 1.39085, 0.415132 )
 bone_name = "armW.L"
 
-[node name="Scene Root" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon" index="0" instance=ExtResource( 3 )]
+[node name="Spatial" type="Spatial" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon" index="0"]
+
+[node name="Scene Root" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon/Spatial" index="0" instance=ExtResource( 3 )]
+
+transform = Transform( 1, -1.61602e-19, 0, -1.32571e-20, 1, 0, 0, 0, 1, 0, 0, 0 )
 
 [node name="RightWeapon" type="BoneAttachment" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton" index="2"]
 
-transform = Transform( 1, -1.50996e-07, 3.89414e-07, 1.50996e-07, 1, 5.96485e-08, -3.89414e-07, -1.19297e-07, 1, 1.7536, 1.4403, 1.13658 )
+transform = Transform( 1, 8.74227e-08, 3.89414e-07, -8.74228e-08, 1, 3.38813e-21, -3.89414e-07, -1.19209e-07, 1, 1.7536, 1.39085, 0.415131 )
 bone_name = "armW.R"
 _sections_unfolded = [ "Transform" ]
 
-[node name="Scene Root" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon" index="0" instance=ExtResource( 4 )]
+[node name="Spatial" type="Spatial" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon" index="0"]
 
+[node name="Scene Root" parent="Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon/Spatial" index="0" instance=ExtResource( 4 )]
+
+transform = Transform( -1, -7.10544e-15, 0, -7.10544e-15, 1, 0, 0, 0, 1, 0, 0, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="FloorStickRay" type="RayCast" parent="Model" index="1"]
@@ -333,26 +340,9 @@ base_path = NodePath("../Scene Root")
 active = true
 data = {
 "active": true,
-"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
+"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath("../Scene Root/AnimationPlayer"),
 "nodes": [ {
-"filter": [  ],
-"from": "Run-loop",
-"id": "anim 3",
-"position": Vector2( 78, 299 ),
-"type": "animation"
-}, {
-"filter": [  ],
-"from": "Walk-loop",
-"id": "anim 2",
-"position": Vector2( 78, 185 ),
-"type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
-}, {
 "id": "out",
 "position": Vector2( 624, 100 ),
 "type": "output"
@@ -362,6 +352,23 @@ data = {
 "id": "anim",
 "position": Vector2( 80, 67 ),
 "type": "animation"
+}, {
+"filter": [  ],
+"from": "Walk-loop",
+"id": "anim 2",
+"position": Vector2( 78, 185 ),
+"type": "animation"
+}, {
+"filter": [  ],
+"from": "Run-loop",
+"id": "anim 3",
+"position": Vector2( 78, 299 ),
+"type": "animation"
+}, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
