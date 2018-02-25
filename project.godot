@@ -1057,7 +1057,7 @@ scene={
 "animation/optimizer/remove_unused_tracks": true,
 "animation/storage": false,
 "external_files/store_in_subdir": false,
-"materials/keep_on_reimport": true,
+"materials/keep_on_reimport": false,
 "materials/location": 1,
 "materials/storage": 1,
 "meshes/compress": true,
@@ -1069,7 +1069,7 @@ scene={
 "nodes/root_name": "Scene Root",
 "nodes/root_scale": 1.0,
 "nodes/root_type": "Spatial",
-"nodes/storage": 1
+"nodes/storage": 0
 }
 
 [input]
