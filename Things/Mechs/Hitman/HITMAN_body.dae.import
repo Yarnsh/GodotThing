@@ -2,15 +2,15 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/ADAMmk2_body.dae-07b05750b6a1c070ad3c7e8e9897bcae.scn"
+path="res://.import/HITMAN_body.dae-1ecdf257b8b9d369aac7cf43967337b6.scn"
 
 [deps]
 
-source_file="res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"
-source_md5="59601b0a920eb7c3822fba5dac10ea9c"
+source_file="res://Things/Mechs/Hitman/HITMAN_body.dae"
+source_md5="262333f8eec27d55bb7360b39965d2ab"
 
-dest_files=[ "res://.import/ADAMmk2_body.dae-07b05750b6a1c070ad3c7e8e9897bcae.scn" ]
-dest_md5="ae63b0897f8bdd1b027ea11fdf3a3dd1"
+dest_files=[ "res://.import/HITMAN_body.dae-1ecdf257b8b9d369aac7cf43967337b6.scn" ]
+dest_md5="417630b1279001e903d374f71c3557cf"
 
 [params]
 

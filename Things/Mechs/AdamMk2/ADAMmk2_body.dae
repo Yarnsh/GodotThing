@@ -5,8 +5,8 @@
 		<author>Anonymous</author>
 		<authoring_tool>Collada Exporter for Blender 2.6+, by Juan Linietsky (juan@codenix.com)</authoring_tool>
 	</contributor>
-	<created>2018-02-25T11:25:36Z</created>
-	<modified>2018-02-25T11:25:36Z</modified>
+	<created>2018-02-25T19:10:05Z</created>
+	<modified>2018-02-25T19:10:05Z</modified>
 	<unit meter="1.0" name="meter"/>
 	<up_axis>Z_UP</up_axis>
 </asset>
@@ -162,10 +162,10 @@
 				<matrix sid="transform"> -1.0 0.0 -6.278329465203569e-07 2.3695406525803264e-07 -6.278329465203569e-07 0.0 1.0 -0.005755066871643066 0.0 1.0 0.0 0.006367208436131477 0.0 0.0 0.0 1.0  </matrix>
 				<node id="id-bone-4" sid="id-skelbones-2-1" name="Pitch" type="JOINT">
 					<matrix sid="transform"> 1.0 0.0 -2.384185791015625e-07 -2.886579864025407e-15 0.0 1.0 0.0 0.41718989610671997 2.384185791015625e-07 0.0 1.0 -1.48767283214557e-13 0.0 0.0 0.0 1.0  </matrix>
-					<node id="id-bone-5" sid="id-skelbones-2-2" name="armW.R" type="JOINT">
+					<node id="id-bone-5" sid="id-skelbones-2-2" name="armW.R0" type="JOINT">
 						<matrix sid="transform"> -1.0 0.0 -8.742276236262114e-08 -1.7535983324050903 -8.74227694680485e-08 0.0 0.9999999403953552 0.9672977328300476 0.0 0.9999997019767761 1.1920925402364446e-07 -0.4093762934207916 0.0 0.0 0.0 1.0  </matrix>
 					</node>
-					<node id="id-bone-6" sid="id-skelbones-2-3" name="armW.L" type="JOINT">
+					<node id="id-bone-6" sid="id-skelbones-2-3" name="armW.L0" type="JOINT">
 						<matrix sid="transform"> -1.0 0.0 8.742277657347586e-08 1.7535983324050903 8.742277657347586e-08 0.0 1.0 0.9672977328300476 0.0 1.0 0.0 -0.4093761146068573 0.0 0.0 0.0 1.0  </matrix>
 					</node>
 				</node>

@@ -6,54 +6,152 @@ script/source = "extends MarginContainer
 
 signal exited_menu
 
-onready var lwep = $VBoxContainer/LWEP
-var lweppop
-onready var rwep = $VBoxContainer/RWEP
-var rweppop
+const WEAPONS = [
+\"NONE\",
+\"Gattling Gun\",
+\"Howitzer\"
+]
+
+onready var torso = $VBoxContainer/TORSO
+var torsopop
+onready var legs = $VBoxContainer/LEGS
+var legspop
 onready var save = $VBoxContainer/CenterContainer/Button
 
-var lwep_selection = \"NONE\"
-var rwep_selection = \"NONE\"
+var lwep_selection = [\"NONE\"]
+var rwep_selection = [\"NONE\"]
+var torso_selection = \"ADAM Mk2\"
+var legs_selection = \"ADAM Mk2\"
+
+var lwep = []
+var lweppop = []
+var rwep = []
+var rweppop = []
+
+var left_weps = 1
+var right_weps = 1
+
+func _get_torso_path():
+	if (torso_selection == \"HITMAN\"):
+		return \"res://Things/Mechs/Hitman/HITMAN_body.dae\"
+	else:
+		return \"res://Things/Mechs/AdamMk2/ADAMmk2_body.dae\"
+
+func _prepare_weapon_options():
+	var t = load(_get_torso_path()).instance()
+	var skeleton = t.get_node(\"body_armature/Skeleton\")
+	left_weps = 0;
+	right_weps = 0;
+	for i in range(0, skeleton.get_bone_count()):
+		var name = skeleton.get_bone_name(i)
+		if (name.begins_with(\"armW.L\")):
+			left_weps += 1
+		else: if (name.begins_with(\"armW.R\")):
+			right_weps += 1
+	t.free()
+	
+	lwep_selection = []
+	for i in range(0, left_weps):
+		lwep_selection.append(\"NONE\")
+		
+	rwep_selection = []
+	for i in range(0, right_weps):
+		rwep_selection.append(\"NONE\")
+	
+	var node = get_node(\"VBoxContainer/Weapons\")
+	if (node != null):
+		node.name = \"doneweapons\"
+		node.call_deferred(\"queue_free\")
+	node = VBoxContainer.new()
+	node.name = \"Weapons\"
+	get_node(\"VBoxContainer\").add_child_below_node(get_node(\"VBoxContainer/HSeparator\"), node)
+	
+	lwep = []
+	lweppop = []
+	var li = 0
+	for i in range(0, left_weps):
+		lwep.append(MenuButton.new())
+		lweppop.append(lwep[i].get_popup())
+		for w in WEAPONS:
+			lweppop[i].add_item(w, li)
+			li += 1
+		lweppop[i].connect(\"id_pressed\", self, \"_on_lwep_pressed\")
+		lwep[i].set_flat(false)
+		node.add_child(lwep[i])
+	
+	rwep = []
+	rweppop = []
+	var ri = 0
+	for i in range(0, right_weps):
+		rwep.append(MenuButton.new())
+		rweppop.append(rwep[i].get_popup())
+		for w in WEAPONS:
+			rweppop[i].add_item(w, ri)
+			ri += 1
+		rweppop[i].connect(\"id_pressed\", self, \"_on_rwep_pressed\")
+		rwep[i].set_flat(false)
+		node.add_child(rwep[i])
 
 func _ready():
-	lwep.text = \"LWEP: \" + lwep_selection
-	lweppop = lwep.get_popup()
-	lweppop.add_item(\"NONE\")
-	lweppop.add_item(\"Gattling Gun\")
-	lweppop.add_item(\"Howitzer\")
-	lweppop.connect(\"id_pressed\", self, \"_on_lwep_pressed\")
+	torso.text = \"TORSO: \" + torso_selection
+	torsopop = torso.get_popup()
+	torsopop.add_item(\"ADAM Mk2\")
+	torsopop.add_item(\"HITMAN\")
+	torsopop.connect(\"id_pressed\", self, \"_on_torso_pressed\")
 	
-	rwep.text = \"RWEP: \" + rwep_selection
-	rweppop = rwep.get_popup()
-	rweppop.add_item(\"NONE\")
-	rweppop.add_item(\"Gattling Gun\")
-	rweppop.add_item(\"Howitzer\")
-	rweppop.connect(\"id_pressed\", self, \"_on_rwep_pressed\")
+	legs.text = \"LEGS: \" + legs_selection
+	legspop = legs.get_popup()
+	legspop.add_item(\"ADAM Mk2\")
+	legspop.connect(\"id_pressed\", self, \"_on_legs_pressed\")
+	
+	_prepare_weapon_options()
 	
 	save.connect(\"button_down\", self, \"_on_save_pressed\")
 
 func _on_lwep_pressed(ID):
-	lwep_selection = lweppop.get_item_text(ID)
-	lwep.text = \"LWEP: \" + lwep_selection
+	var ID_real = ID % WEAPONS.size()
+	var slot = ID / WEAPONS.size()
+	lwep_selection[slot] = lweppop[slot].get_item_text(ID_real)
+	lwep[slot].text = \"LWEP: \" + lwep_selection[slot]
 
 func _on_rwep_pressed(ID):
-	rwep_selection = rweppop.get_item_text(ID)
-	rwep.text = \"RWEP: \" + rwep_selection
+	var ID_real = ID % WEAPONS.size()
+	var slot = ID / WEAPONS.size()
+	rwep_selection[slot] = rweppop[slot].get_item_text(ID_real)
+	rwep[slot].text = \"RWEP: \" + rwep_selection[slot]
+
+func _on_torso_pressed(ID):
+	torso_selection = torsopop.get_item_text(ID)
+	torso.text = \"TORSO: \" + torso_selection
+	_prepare_weapon_options()
+
+func _on_legs_pressed(ID):
+	legs_selection = legspop.get_item_text(ID)
+	legs.text = \"LEGS: \" + legs_selection
 
 func _on_save_pressed():
-	if (rwep_selection == \"Gattling Gun\"):
-		global.rWepPart = \"res://Things/Weapons/STANDARD_gattlinggun.dae\"
-	else: if (rwep_selection == \"Howitzer\"):
-		global.rWepPart = \"res://Things/Weapons/STANDARD_howitzer.dae\"
-	else:
-		global.rWepPart = \"NONE\"
+	global.rWepPart = []
+	for i in range(0, right_weps):
+		if (rwep_selection[i] == \"Gattling Gun\"):
+			global.rWepPart.append(\"res://Things/Weapons/STANDARD_gattlinggun.dae\")
+		else: if (rwep_selection[i] == \"Howitzer\"):
+			global.rWepPart.append(\"res://Things/Weapons/STANDARD_howitzer.dae\")
+		else:
+			global.rWepPart.append(\"NONE\")
 	
-	if (lwep_selection == \"Gattling Gun\"):
-		global.lWepPart = \"res://Things/Weapons/STANDARD_gattlinggun.dae\"
-	else: if (lwep_selection == \"Howitzer\"):
-		global.lWepPart = \"res://Things/Weapons/STANDARD_howitzer.dae\"
-	else:
-		global.lWepPart = \"NONE\"
+	global.lWepPart = []
+	for i in range(0, left_weps):
+		if (lwep_selection[i] == \"Gattling Gun\"):
+			global.lWepPart.append(\"res://Things/Weapons/STANDARD_gattlinggun.dae\")
+		else: if (lwep_selection[i] == \"Howitzer\"):
+			global.lWepPart.append(\"res://Things/Weapons/STANDARD_howitzer.dae\")
+		else:
+			global.lWepPart.append(\"NONE\")
+	
+	global.bodyPart = _get_torso_path()
+	
+	if (legs_selection == \"ADAM Mk2\"):
+		global.legPart = \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
 	
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
@@ -89,7 +187,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 alignment = 0
 
-[node name="LWEP" type="MenuButton" parent="VBoxContainer" index="0"]
+[node name="LEGS" type="MenuButton" parent="VBoxContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -107,12 +205,12 @@ action_mode = 0
 enabled_focus_mode = 0
 shortcut = null
 group = null
-text = "LWEP:"
+text = "LEGS:"
 flat = false
 align = 1
 items = [  ]
 
-[node name="RWEP" type="MenuButton" parent="VBoxContainer" index="1"]
+[node name="TORSO" type="MenuButton" parent="VBoxContainer" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -131,12 +229,12 @@ action_mode = 0
 enabled_focus_mode = 0
 shortcut = null
 group = null
-text = "RWEP:"
+text = "TORSO:"
 flat = false
 align = 1
 items = [  ]
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" index="2"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -144,7 +242,83 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 48.0
 margin_right = 478.0
-margin_bottom = 68.0
+margin_bottom = 52.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="Weapons" type="VBoxContainer" parent="VBoxContainer" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 56.0
+margin_right = 478.0
+margin_bottom = 100.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="LWEP" type="MenuButton" parent="VBoxContainer/Weapons" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 478.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+flat = false
+align = 1
+items = [  ]
+
+[node name="RWEP" type="MenuButton" parent="VBoxContainer/Weapons" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 24.0
+margin_right = 478.0
+margin_bottom = 44.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+flat = false
+align = 1
+items = [  ]
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" index="4"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 104.0
+margin_right = 478.0
+margin_bottom = 124.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
