@@ -12,6 +12,9 @@ var legPart = "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"
 var lWepPart = ["NONE"]
 var rWepPart = ["NONE"]
 
+var color1 = Color(0,0,0)
+var color2 = Color(0,0,0)
+
 func getId():
 	id_lock.lock()
 	var ret_id = next_id

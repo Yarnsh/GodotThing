@@ -23,6 +23,7 @@ var deaccelspeed = 120
 var vel = Vector3()
 var speedLimit = 30
 
+var leg_skeleton
 var torso_skeleton
 
 var torso_yaw_bone_id = 0
@@ -117,8 +118,40 @@ func _build_mech():
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
 	
 	_ready_nodes()
+	
+	#color 1
+	var meshNode = leg_skeleton.get_child(0)
+	var mesh = meshNode.get_mesh()
+	var mat = mesh.surface_get_material(1)
+	mat.set_albedo(global.color1)
+	mesh.surface_set_material(1, mat)
+	meshNode.set_mesh(mesh)
+	
+	meshNode = torso_skeleton.get_child(0)
+	mesh = meshNode.get_mesh()
+	mat = mesh.surface_get_material(1)
+	mat.set_albedo(global.color1)
+	mesh.surface_set_material(1, mat)
+	meshNode.set_mesh(mesh)
+	
+	#color 2
+	meshNode = leg_skeleton.get_child(0)
+	mesh = meshNode.get_mesh()
+	mat = mesh.surface_get_material(2)
+	mat.set_albedo(global.color2)
+	mesh.surface_set_material(2, mat)
+	meshNode.set_mesh(mesh)
+	
+	meshNode = torso_skeleton.get_child(0)
+	mesh = meshNode.get_mesh()
+	mat = mesh.surface_get_material(2)
+	mat.set_albedo(global.color2)
+	mesh.surface_set_material(2, mat)
+	meshNode.set_mesh(mesh)
 
 func _ready_nodes():
+	leg_skeleton = get_node(\"Model/Scene Root/leg_armature/Skeleton\")
+	
 	torso_skeleton = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
 	torso_yaw_bone_transform = torso_skeleton.get_bone_pose(torso_yaw_bone_id)
@@ -387,9 +420,24 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
+"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
+"animation": null,
+"filter": [  ],
+"id": "anim",
+"position": Vector2( 80, 67 ),
+"type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
+}, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
@@ -400,21 +448,6 @@ data = {
 "filter": [  ],
 "id": "anim 3",
 "position": Vector2( 78, 299 ),
-"type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
-}, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim",
-"position": Vector2( 80, 67 ),
 "type": "animation"
 } ]
 }

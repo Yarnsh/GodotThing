@@ -12,11 +12,11 @@ const WEAPONS = [
 \"Howitzer\"
 ]
 
-onready var torso = $VBoxContainer/TORSO
+onready var torso = $HBoxContainer/VBoxContainer/TORSO
 var torsopop
-onready var legs = $VBoxContainer/LEGS
+onready var legs = $HBoxContainer/VBoxContainer/LEGS
 var legspop
-onready var save = $VBoxContainer/CenterContainer/Button
+onready var save = $HBoxContainer/VBoxContainer/CenterContainer/Button
 
 var lwep_selection = [\"NONE\"]
 var rwep_selection = [\"NONE\"]
@@ -30,6 +30,23 @@ var rweppop = []
 
 var left_weps = 1
 var right_weps = 1
+
+
+#Color picking stuff
+onready var R1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/R
+onready var G1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/G
+onready var B1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/B
+onready var CRect1 = $HBoxContainer/VBoxContainer2/Color1/ColorRect
+
+onready var R2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/R
+onready var G2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/G
+onready var B2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/B
+onready var CRect2 = $HBoxContainer/VBoxContainer2/Color2/ColorRect
+
+func _on_color1_change(value):
+	CRect1.set_frame_color(Color(R1.get_value(), G1.get_value(), B1.get_value()))
+func _on_color2_change(value):
+	CRect2.set_frame_color(Color(R2.get_value(), G2.get_value(), B2.get_value()))
 
 func _get_torso_path():
 	if (torso_selection == \"HITMAN\"):
@@ -58,13 +75,13 @@ func _prepare_weapon_options():
 	for i in range(0, right_weps):
 		rwep_selection.append(\"NONE\")
 	
-	var node = get_node(\"VBoxContainer/Weapons\")
+	var node = get_node(\"HBoxContainer/VBoxContainer/Weapons\")
 	if (node != null):
 		node.name = \"doneweapons\"
 		node.call_deferred(\"queue_free\")
 	node = VBoxContainer.new()
 	node.name = \"Weapons\"
-	get_node(\"VBoxContainer\").add_child_below_node(get_node(\"VBoxContainer/HSeparator\"), node)
+	get_node(\"HBoxContainer/VBoxContainer\").add_child_below_node(get_node(\"HBoxContainer/VBoxContainer/HSeparator\"), node)
 	
 	lwep = []
 	lweppop = []
@@ -105,6 +122,13 @@ func _ready():
 	legspop.connect(\"id_pressed\", self, \"_on_legs_pressed\")
 	
 	_prepare_weapon_options()
+	
+	R1.connect(\"value_changed\", self, \"_on_color1_change\")
+	G1.connect(\"value_changed\", self, \"_on_color1_change\")
+	B1.connect(\"value_changed\", self, \"_on_color1_change\")
+	R2.connect(\"value_changed\", self, \"_on_color2_change\")
+	G2.connect(\"value_changed\", self, \"_on_color2_change\")
+	B2.connect(\"value_changed\", self, \"_on_color2_change\")
 	
 	save.connect(\"button_down\", self, \"_on_save_pressed\")
 
@@ -153,6 +177,9 @@ func _on_save_pressed():
 	if (legs_selection == \"ADAM Mk2\"):
 		global.legPart = \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
 	
+	global.color1 = CRect1.get_frame_color()
+	global.color2 = CRect2.get_frame_color()
+	
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
 
@@ -162,7 +189,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 486.0
+margin_right = 801.0
 margin_bottom = 508.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -171,29 +198,45 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 script = SubResource( 1 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 8.0
-margin_right = 486.0
+margin_right = 801.0
 margin_bottom = 508.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-alignment = 0
+alignment = 1
 
-[node name="LEGS" type="MenuButton" parent="VBoxContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 478.0
+margin_right = 394.0
+margin_bottom = 508.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="LEGS" type="MenuButton" parent="HBoxContainer/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 394.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -210,14 +253,14 @@ flat = false
 align = 1
 items = [  ]
 
-[node name="TORSO" type="MenuButton" parent="VBoxContainer" index="1"]
+[node name="TORSO" type="MenuButton" parent="HBoxContainer/VBoxContainer" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 24.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 44.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -234,14 +277,14 @@ flat = false
 align = 1
 items = [  ]
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer" index="2"]
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 48.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 52.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -249,14 +292,14 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 
-[node name="Weapons" type="VBoxContainer" parent="VBoxContainer" index="3"]
+[node name="Weapons" type="VBoxContainer" parent="HBoxContainer/VBoxContainer" index="3"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 56.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 100.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
@@ -265,13 +308,13 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 alignment = 0
 
-[node name="LWEP" type="MenuButton" parent="VBoxContainer/Weapons" index="0"]
+[node name="LWEP" type="MenuButton" parent="HBoxContainer/VBoxContainer/Weapons" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -287,14 +330,14 @@ flat = false
 align = 1
 items = [  ]
 
-[node name="RWEP" type="MenuButton" parent="VBoxContainer/Weapons" index="1"]
+[node name="RWEP" type="MenuButton" parent="HBoxContainer/VBoxContainer/Weapons" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 24.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 44.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -310,14 +353,14 @@ flat = false
 align = 1
 items = [  ]
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" index="4"]
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer/VBoxContainer" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 104.0
-margin_right = 478.0
+margin_right = 394.0
 margin_bottom = 124.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
@@ -326,14 +369,14 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 use_top_left = false
 
-[node name="Button" type="Button" parent="VBoxContainer/CenterContainer" index="0"]
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/CenterContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 217.0
-margin_right = 260.0
+margin_left = 175.0
+margin_right = 218.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -348,5 +391,329 @@ group = null
 text = "SAVE"
 flat = false
 align = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 398.0
+margin_right = 793.0
+margin_bottom = 508.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Color1" type="HBoxContainer" parent="HBoxContainer/VBoxContainer2" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 395.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2/Color1" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 312.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2/Color1/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 312.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Color 1"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Material", "Size Flags", "custom_colors", "custom_constants", "custom_fonts" ]
+
+[node name="R" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color1/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 312.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="G" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color1/VBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 38.0
+margin_right = 312.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="B" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color1/VBoxContainer" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 58.0
+margin_right = 312.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer2/Color1" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 316.0
+margin_right = 395.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.25
+color = Color( 0, 0, 0, 1 )
+_sections_unfolded = [ "Anchor", "Size Flags" ]
+
+[node name="Color2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer2" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 78.0
+margin_right = 395.0
+margin_bottom = 152.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2/Color2" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 312.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2/Color2/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 312.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Color 2"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect", "Theme", "custom_colors", "custom_fonts", "custom_styles" ]
+
+[node name="R" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color2/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 312.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="G" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color2/VBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 38.0
+margin_right = 312.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="B" type="HSlider" parent="HBoxContainer/VBoxContainer2/Color2/VBoxContainer" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 58.0
+margin_right = 312.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 1.0
+step = 0.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+editable = true
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer2/Color2" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 316.0
+margin_right = 395.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 0.25
+color = Color( 0, 0, 0, 1 )
+_sections_unfolded = [ "Anchor", "Size Flags" ]
 
 
