@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Things/Patterns/plain.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 
@@ -10,6 +12,11 @@ const WEAPONS = [
 \"NONE\",
 \"Gattling Gun\",
 \"Howitzer\"
+]
+
+const PATTERNS = [
+\"Plain\",
+\"Camo\"
 ]
 
 onready var torso = $HBoxContainer/VBoxContainer/TORSO
@@ -36,17 +43,23 @@ var right_weps = 1
 onready var R1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/R
 onready var G1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/G
 onready var B1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/B
-onready var CRect1 = $HBoxContainer/VBoxContainer2/Color1/ColorRect
+onready var CRect1 = $HBoxContainer/VBoxContainer2/Color1/TextureRect
+onready var Pattern1 = $HBoxContainer/VBoxContainer2/Color1/VBoxContainer/Pattern
+var PatternPop1
+var PatternSelect1 = \"res://Things/Patterns/plain.png\"
 
 onready var R2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/R
 onready var G2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/G
 onready var B2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/B
-onready var CRect2 = $HBoxContainer/VBoxContainer2/Color2/ColorRect
+onready var CRect2 = $HBoxContainer/VBoxContainer2/Color2/TextureRect
+onready var Pattern2 = $HBoxContainer/VBoxContainer2/Color2/VBoxContainer/Pattern
+var PatternPop2
+var PatternSelect2 = \"res://Things/Patterns/plain.png\"
 
 func _on_color1_change(value):
-	CRect1.set_frame_color(Color(R1.get_value(), G1.get_value(), B1.get_value()))
+	CRect1.set_modulate(Color(R1.get_value(), G1.get_value(), B1.get_value()))
 func _on_color2_change(value):
-	CRect2.set_frame_color(Color(R2.get_value(), G2.get_value(), B2.get_value()))
+	CRect2.set_modulate(Color(R2.get_value(), G2.get_value(), B2.get_value()))
 
 func _get_torso_path():
 	if (torso_selection == \"HITMAN\"):
@@ -94,6 +107,7 @@ func _prepare_weapon_options():
 			li += 1
 		lweppop[i].connect(\"id_pressed\", self, \"_on_lwep_pressed\")
 		lwep[i].set_flat(false)
+		lwep[i].text = \"L-WEAPON #\" + String(i) + \": NONE\"
 		node.add_child(lwep[i])
 	
 	rwep = []
@@ -107,7 +121,38 @@ func _prepare_weapon_options():
 			ri += 1
 		rweppop[i].connect(\"id_pressed\", self, \"_on_rwep_pressed\")
 		rwep[i].set_flat(false)
+		rwep[i].text = \"R-WEAPON #\" + String(i) + \": NONE\"
 		node.add_child(rwep[i])
+
+func _on_pattern1_pressed(ID):
+	var sel = PatternPop1.get_item_text(ID)
+	Pattern1.text = \"PATTERN: \" + sel
+	if (sel == PATTERNS[0]):
+		PatternSelect1 = \"res://Things/Patterns/plain.png\"
+	else: if (sel == PATTERNS[1]):
+		PatternSelect1 = \"res://Things/Patterns/camo.png\"
+	
+	CRect2.set_texture(load(PatternSelect2))
+
+func _on_pattern2_pressed(ID):
+	var sel = PatternPop2.get_item_text(ID)
+	Pattern2.text = \"PATTERN: \" + sel
+	if (sel == PATTERNS[0]):
+		PatternSelect2 = \"res://Things/Patterns/plain.png\"
+	else: if (sel == PATTERNS[1]):
+		PatternSelect2 = \"res://Things/Patterns/camo.png\"
+	
+	CRect2.set_texture(load(PatternSelect2))
+
+func _prepare_pattern_options():
+	PatternPop1 = Pattern1.get_popup()
+	PatternPop2 = Pattern2.get_popup()
+	
+	for p in PATTERNS:
+		PatternPop1.add_item(p)
+		PatternPop2.add_item(p)
+	PatternPop1.connect(\"id_pressed\", self, \"_on_pattern1_pressed\")
+	PatternPop2.connect(\"id_pressed\", self, \"_on_pattern2_pressed\")
 
 func _ready():
 	torso.text = \"TORSO: \" + torso_selection
@@ -130,19 +175,21 @@ func _ready():
 	G2.connect(\"value_changed\", self, \"_on_color2_change\")
 	B2.connect(\"value_changed\", self, \"_on_color2_change\")
 	
+	_prepare_pattern_options()
+	
 	save.connect(\"button_down\", self, \"_on_save_pressed\")
 
 func _on_lwep_pressed(ID):
 	var ID_real = ID % WEAPONS.size()
 	var slot = ID / WEAPONS.size()
 	lwep_selection[slot] = lweppop[slot].get_item_text(ID_real)
-	lwep[slot].text = \"LWEP: \" + lwep_selection[slot]
+	lwep[slot].text = \"L-WEAPON #\" + String(slot) + \": \" + lwep_selection[slot]
 
 func _on_rwep_pressed(ID):
 	var ID_real = ID % WEAPONS.size()
 	var slot = ID / WEAPONS.size()
 	rwep_selection[slot] = rweppop[slot].get_item_text(ID_real)
-	rwep[slot].text = \"RWEP: \" + rwep_selection[slot]
+	rwep[slot].text = \"R-WEAPON #\" + String(slot) + \": \" + rwep_selection[slot]
 
 func _on_torso_pressed(ID):
 	torso_selection = torsopop.get_item_text(ID)
@@ -177,13 +224,16 @@ func _on_save_pressed():
 	if (legs_selection == \"ADAM Mk2\"):
 		global.legPart = \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
 	
-	global.color1 = CRect1.get_frame_color()
-	global.color2 = CRect2.get_frame_color()
+	global.color1 = CRect1.get_modulate()
+	global.color2 = CRect2.get_modulate()
+	
+	global.pattern1 = PatternSelect1
+	global.pattern2 = PatternSelect2
 	
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
 
-[node name="MarginContainer" type="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -416,7 +466,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 395.0
-margin_bottom = 74.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -431,8 +481,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 312.0
-margin_bottom = 74.0
+margin_right = 289.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -447,7 +497,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 14.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 2
@@ -468,7 +518,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 18.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 34.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -496,7 +546,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 38.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 54.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -524,7 +574,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 58.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 74.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -544,23 +594,50 @@ tick_count = 0
 ticks_on_borders = false
 focus_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer2/Color1" index="1"]
+[node name="Pattern" type="MenuButton" parent="HBoxContainer/VBoxContainer2/Color1/VBoxContainer" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 316.0
-margin_right = 395.0
-margin_bottom = 74.0
+margin_top = 78.0
+margin_right = 289.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "PATTERN: Plain"
+flat = false
+align = 1
+items = [  ]
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer2/Color1" index="1"]
+
+modulate = Color( 0, 0, 0, 1 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 293.0
+margin_right = 395.0
+margin_bottom = 98.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-size_flags_stretch_ratio = 0.25
-color = Color( 0, 0, 0, 1 )
-_sections_unfolded = [ "Anchor", "Size Flags" ]
+size_flags_stretch_ratio = 0.35
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 0
+_sections_unfolded = [ "Material", "Size Flags", "Visibility" ]
 
 [node name="Color2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer2" index="1"]
 
@@ -568,9 +645,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 78.0
+margin_top = 102.0
 margin_right = 395.0
-margin_bottom = 152.0
+margin_bottom = 200.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -585,8 +662,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 312.0
-margin_bottom = 74.0
+margin_right = 289.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -601,7 +678,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 14.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 2
@@ -622,7 +699,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 18.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 34.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -650,7 +727,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 38.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 54.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -678,7 +755,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 58.0
-margin_right = 312.0
+margin_right = 289.0
 margin_bottom = 74.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -698,22 +775,49 @@ tick_count = 0
 ticks_on_borders = false
 focus_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer2/Color2" index="1"]
+[node name="Pattern" type="MenuButton" parent="HBoxContainer/VBoxContainer2/Color2/VBoxContainer" index="4"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 316.0
-margin_right = 395.0
-margin_bottom = 74.0
+margin_top = 78.0
+margin_right = 289.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 0
 mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "PATTERN: Plain"
+flat = false
+align = 1
+items = [  ]
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer2/Color2" index="1"]
+
+modulate = Color( 0, 0, 0, 1 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 293.0
+margin_right = 395.0
+margin_bottom = 98.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-size_flags_stretch_ratio = 0.25
-color = Color( 0, 0, 0, 1 )
-_sections_unfolded = [ "Anchor", "Size Flags" ]
+size_flags_stretch_ratio = 0.35
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 0
+_sections_unfolded = [ "Material", "Size Flags", "Visibility" ]
 
 

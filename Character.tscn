@@ -119,11 +119,14 @@ func _build_mech():
 	
 	_ready_nodes()
 	
+	var pattern = load(global.pattern1)
+	print(global.pattern1)
 	#color 1
 	var meshNode = leg_skeleton.get_child(0)
 	var mesh = meshNode.get_mesh()
 	var mat = mesh.surface_get_material(1)
 	mat.set_albedo(global.color1)
+	mat.albedo_texture = pattern
 	mesh.surface_set_material(1, mat)
 	meshNode.set_mesh(mesh)
 	
@@ -131,14 +134,18 @@ func _build_mech():
 	mesh = meshNode.get_mesh()
 	mat = mesh.surface_get_material(1)
 	mat.set_albedo(global.color1)
+	mat.albedo_texture = pattern
 	mesh.surface_set_material(1, mat)
 	meshNode.set_mesh(mesh)
 	
+	pattern = load(global.pattern2)
+	print(global.pattern2)
 	#color 2
 	meshNode = leg_skeleton.get_child(0)
 	mesh = meshNode.get_mesh()
 	mat = mesh.surface_get_material(2)
 	mat.set_albedo(global.color2)
+	mat.albedo_texture = pattern
 	mesh.surface_set_material(2, mat)
 	meshNode.set_mesh(mesh)
 	
@@ -146,6 +153,7 @@ func _build_mech():
 	mesh = meshNode.get_mesh()
 	mat = mesh.surface_get_material(2)
 	mat.set_albedo(global.color2)
+	mat.albedo_texture = pattern
 	mesh.surface_set_material(2, mat)
 	meshNode.set_mesh(mesh)
 
@@ -339,7 +347,7 @@ func _physics_process(delta):
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true

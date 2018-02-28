@@ -13,7 +13,9 @@ var lWepPart = ["NONE"]
 var rWepPart = ["NONE"]
 
 var color1 = Color(0,0,0)
+var pattern1 = "res://Things/Patterns/plain.png"
 var color2 = Color(0,0,0)
+var pattern2 = "res://Things/Patterns/plain.png"
 
 func getId():
 	id_lock.lock()
