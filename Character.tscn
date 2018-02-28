@@ -120,7 +120,6 @@ func _build_mech():
 	_ready_nodes()
 	
 	var pattern = load(global.pattern1)
-	print(global.pattern1)
 	#color 1
 	var meshNode = leg_skeleton.get_child(0)
 	var mesh = meshNode.get_mesh()
@@ -139,7 +138,6 @@ func _build_mech():
 	meshNode.set_mesh(mesh)
 	
 	pattern = load(global.pattern2)
-	print(global.pattern2)
 	#color 2
 	meshNode = leg_skeleton.get_child(0)
 	mesh = meshNode.get_mesh()

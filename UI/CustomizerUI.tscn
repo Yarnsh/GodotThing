@@ -132,7 +132,7 @@ func _on_pattern1_pressed(ID):
 	else: if (sel == PATTERNS[1]):
 		PatternSelect1 = \"res://Things/Patterns/camo.png\"
 	
-	CRect2.set_texture(load(PatternSelect2))
+	CRect1.set_texture(load(PatternSelect1))
 
 func _on_pattern2_pressed(ID):
 	var sel = PatternPop2.get_item_text(ID)
