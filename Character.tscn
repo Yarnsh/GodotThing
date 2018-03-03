@@ -21,7 +21,8 @@ var accelspeed = 30
 var rotspeed = 0.07
 var deaccelspeed = 50
 var vel = Vector3()
-var speedLimit = 30
+var slideVel = Vector3()
+var speedLimit = 25
 
 var intentSpeed = 10
 var intentDir = Vector3(0,0,-1)
@@ -291,16 +292,24 @@ func _physics_process(delta):
 			stick = true
 			move_and_collide(Vector3(0,-10,0))
 		if (is_on_floor() or stick):
-			vel = intentDir * intentSpeed
+			if (!was_on_floor):
+				slideVel = vel
+			vel = (floorDir * intentSpeed)
 			move_and_slide(vel,Vector3(0,1,0))
+			slideVel = slideVel.normalized() * max(0, (slideVel.length() - deaccelspeed*delta))
+			slideVel = move_and_slide(slideVel,Vector3(0,1,0))
 			
 			animPlayer.blend3_node_set_amount(\"walkBlend\", min(1.0, -1.0 + (2*intentSpeed/speedLimit)))
+			was_on_floor = true
 		else :
+			if (was_on_floor):
+				vel += slideVel
+			intentSpeed = 0
 			vel += Vector3(0,-9.8*delta,0)
 			vel = move_and_slide(vel,Vector3(0,1,0))
 			
 			animPlayer.blend3_node_set_amount(\"walkBlend\", -1.0)
-		
+			was_on_floor = false
 		
 		if (!in_menu and rightWeaponCooldown <= 0.0):
 			if (Input.is_action_pressed(\"fire_right\")):
@@ -414,25 +423,9 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
+"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
 "master": NodePath(""),
 "nodes": [ {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim",
-"position": Vector2( 80, 67 ),
-"type": "animation"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim 3",
-"position": Vector2( 78, 299 ),
-"type": "animation"
-}, {
 "blend": -1.0,
 "id": "walkBlend",
 "position": Vector2( 345, 96 ),
@@ -443,6 +436,22 @@ data = {
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
+}, {
+"animation": null,
+"filter": [  ],
+"id": "anim 3",
+"position": Vector2( 78, 299 ),
+"type": "animation"
+}, {
+"animation": null,
+"filter": [  ],
+"id": "anim",
+"position": Vector2( 80, 67 ),
+"type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
