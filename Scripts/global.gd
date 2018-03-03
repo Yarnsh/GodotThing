@@ -7,10 +7,16 @@ var particles
 var bulletScene
 var currentNav
 
+var WEAPONS = [
+	load("res://Scripts/weapon.gd").new("NONE", "NONE", 99999.0),
+	load("res://Scripts/weapon.gd").new("Gattling Gun", "res://Things/Weapons/STANDARD_gattlinggun.dae", 0.083),
+	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/STANDARD_howitzer.dae", 1.2)
+]
+
 var bodyPart = "res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"
 var legPart = "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"
-var lWepPart = ["NONE"]
-var rWepPart = ["NONE"]
+var lWepPart = [WEAPONS[0]]
+var rWepPart = [WEAPONS[0]]
 
 var color1 = Color(0,0,0)
 var pattern1 = "res://Things/Patterns/plain.png"

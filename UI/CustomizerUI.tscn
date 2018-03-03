@@ -210,21 +210,15 @@ func _on_legs_pressed(ID):
 func _on_save_pressed():
 	global.rWepPart = []
 	for i in range(0, right_weps):
-		if (rwep_selection[i] == \"Gattling Gun\"):
-			global.rWepPart.append(\"res://Things/Weapons/STANDARD_gattlinggun.dae\")
-		else: if (rwep_selection[i] == \"Howitzer\"):
-			global.rWepPart.append(\"res://Things/Weapons/STANDARD_howitzer.dae\")
-		else:
-			global.rWepPart.append(\"NONE\")
+		for weapon in global.WEAPONS:
+			if (rwep_selection[i] == weapon.name):
+				global.rWepPart.append(weapon)
 	
 	global.lWepPart = []
 	for i in range(0, left_weps):
-		if (lwep_selection[i] == \"Gattling Gun\"):
-			global.lWepPart.append(\"res://Things/Weapons/STANDARD_gattlinggun.dae\")
-		else: if (lwep_selection[i] == \"Howitzer\"):
-			global.lWepPart.append(\"res://Things/Weapons/STANDARD_howitzer.dae\")
-		else:
-			global.lWepPart.append(\"NONE\")
+		for weapon in global.WEAPONS:
+			if (lwep_selection[i] == weapon.name):
+				global.lWepPart.append(weapon)
 	
 	global.bodyPart = _get_torso_path()
 	
@@ -239,7 +233,7 @@ func _on_save_pressed():
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
 
-[node name="MarginContainer" type="MarginContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer"]
 
 anchor_left = 0.0
 anchor_top = 0.0

@@ -7,7 +7,7 @@ path="res://.import/Bigmap.dae-3d1f0884630e748ccd0d812299d03b52.scn"
 [deps]
 
 source_file="res://TestMap2/Bigmap.dae"
-source_md5="11d03982d8b8dae83f78a63841bf55d4"
+source_md5="cc59761a133bec226084a68c1718d698"
 
 dest_files=[ "res://.import/Bigmap.dae-3d1f0884630e748ccd0d812299d03b52.scn" ]
 dest_md5="722387b17dde4fbac622c7d15cec2c84"

@@ -41,16 +41,18 @@ var torso_pitchspeed = 0.05
 var pitch_torso_facing = Vector3(0,0,1)
 var pitch_limit = 90.5
 
-var leftWeaponNode
-var leftWeaponTransform = Transform()
-var leftWeaponFireRate = 0.2
-var leftWeaponCooldown = 0.0
+var leftWeaponSelected = 0
+var leftWeaponNode = []
+var leftWeaponTransform = []
+var leftWeaponFireRate = []
+var leftWeaponCooldown = []
 onready var leftWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer/TextureProgress
 
-var rightWeaponNode
-var rightWeaponTransform = Transform()
-var rightWeaponFireRate = 1.0
-var rightWeaponCooldown = 0.0
+var rightWeaponSelected = 0
+var rightWeaponNode = []
+var rightWeaponTransform = []
+var rightWeaponFireRate = []
+var rightWeaponCooldown = []
 onready var rightWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer2/TextureProgress2
 
 var camrot = Vector3()
@@ -87,12 +89,28 @@ func _build_mech():
 	
 	var leftWeps = []
 	var rightWeps = []
+	leftWeaponNode = []
+	leftWeaponTransform = []
+	leftWeaponFireRate = []
+	leftWeaponCooldown = []
+	rightWeaponNode = []
+	rightWeaponTransform = []
+	rightWeaponFireRate = []
+	rightWeaponCooldown = []
 	for i in range(0, torso_skel.get_bone_count()):
 		var name = torso_skel.get_bone_name(i)
 		if (name.begins_with(\"armW.L\")):
 			leftWeps.append(name)
+			leftWeaponNode.append(null)
+			leftWeaponTransform.append(Transform())
+			leftWeaponFireRate.append(1.0)
+			leftWeaponCooldown.append(0.0)
 		else: if (name.begins_with(\"armW.R\")):
 			rightWeps.append(name)
+			rightWeaponNode.append(null)
+			rightWeaponTransform.append(Transform())
+			rightWeaponFireRate.append(1.0)
+			rightWeaponCooldown.append(0.0)
 	
 	for lname in leftWeps:
 		var lw_attach = BoneAttachment.new()
@@ -103,7 +121,9 @@ func _build_mech():
 		var lspatial = Spatial.new()
 		lspatial.name = \"Spatial\"
 		lw_attach.add_child(lspatial)
-		var l_wep_part = load(global.lWepPart[index])
+		var l_wep_part = load(global.lWepPart[index].path)
+		leftWeaponFireRate[index] = global.lWepPart[index].fireRate
+		leftWeaponCooldown[index] = leftWeaponFireRate[index]
 		if (l_wep_part != null):
 			lspatial.add_child(l_wep_part.instance())
 	
@@ -116,7 +136,9 @@ func _build_mech():
 		var rspatial = Spatial.new()
 		rspatial.name = \"Spatial\"
 		rw_attach.add_child(rspatial)
-		var r_wep_part = load(global.rWepPart[index])
+		var r_wep_part = load(global.rWepPart[index].path)
+		rightWeaponFireRate[index] = global.rWepPart[index].fireRate
+		rightWeaponCooldown[index] = rightWeaponFireRate[index]
 		if (r_wep_part != null):
 			rspatial.add_child(r_wep_part.instance())
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
@@ -168,11 +190,13 @@ func _ready_nodes():
 	torso_pitch_bone_id = torso_skeleton.find_bone(\"Pitch\")
 	torso_pitch_bone_transform = torso_skeleton.get_bone_pose(torso_pitch_bone_id)
 	
-	leftWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon0/Spatial\")
-	leftWeaponTransform = leftWeaponNode.global_transform
+	for i in range(0, leftWeaponNode.size()):
+		leftWeaponNode[i] = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon\" + String(i) + \"/Spatial\")
+		leftWeaponTransform[i] = leftWeaponNode[i].global_transform
 	
-	rightWeaponNode = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon0/Spatial\")
-	rightWeaponTransform = rightWeaponNode.global_transform
+	for i in range(0, rightWeaponNode.size()):
+		rightWeaponNode[i] = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon\" + String(i) + \"/Spatial\")
+		rightWeaponTransform[i] = rightWeaponNode[i].global_transform
 	
 	floorStickRay = get_node(\"Model/FloorStickRay\")
 	
@@ -219,6 +243,12 @@ func _input(event):
 				cmenu.show()
 				in_menu = true
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			else: if (event.is_action_pressed(\"left_weapon_switch\")):
+				leftWeaponSelected = (leftWeaponSelected + 1) % leftWeaponNode.size()
+				get_node(\"MarginContainer/HBoxContainer/VBoxContainer/Label\").text = String(leftWeaponSelected)
+			else: if (event.is_action_pressed(\"right_weapon_switch\")):
+				rightWeaponSelected = (rightWeaponSelected + 1) % rightWeaponNode.size()
+				get_node(\"MarginContainer/HBoxContainer/VBoxContainer2/Label\").text = String(rightWeaponSelected)
 
 func _physics_process(delta):
 	if (is_ready):
@@ -275,9 +305,9 @@ func _physics_process(delta):
 		torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 		torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
 		
-		if (camera_ray_colliding):
-			leftWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
-			rightWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
+		#if (camera_ray_colliding):
+		#	leftWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
+		#	rightWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
 		
 		var stick = false
 		if (floorStickRay.is_colliding()):
@@ -303,29 +333,31 @@ func _physics_process(delta):
 			animPlayer.blend3_node_set_amount(\"walkBlend\", -1.0)
 			was_on_floor = false
 		
-		if (!in_menu and rightWeaponCooldown <= 0.0):
-			if (Input.is_action_pressed(\"fire_right\")):
-				rightWeaponCooldown = rightWeaponFireRate
+		if (!in_menu):
+			for i in range(0, rightWeaponCooldown.size()):
+				rightWeaponCooldown[i] -= delta
+			if (Input.is_action_pressed(\"fire_right\") and rightWeaponCooldown[rightWeaponSelected] <= 0.0):
+				rightWeaponCooldown[rightWeaponSelected] = rightWeaponFireRate[rightWeaponSelected]
 				var node = global.bulletScene.instance()
 				node.parent_vel = vel
 				node.shooter_id = id
-				node.set_transform(rightWeaponNode.global_transform)
+				node.set_transform(rightWeaponNode[rightWeaponSelected].global_transform)
 				get_tree().get_root().add_child(node)
-		else:
-			rightWeaponCooldown -= delta
-		rightWeaponCooldownBar.value = (rightWeaponFireRate - rightWeaponCooldown) * 100 / rightWeaponFireRate
+				
+		rightWeaponCooldownBar.value = (rightWeaponFireRate[rightWeaponSelected] - rightWeaponCooldown[rightWeaponSelected]) * 100 / rightWeaponFireRate[rightWeaponSelected]
 		
-		if (!in_menu and leftWeaponCooldown <= 0.0):
-			if (Input.is_action_pressed(\"fire_left\")):
-				leftWeaponCooldown = leftWeaponFireRate
+		if (!in_menu):
+			for i in range(0, leftWeaponCooldown.size()):
+				leftWeaponCooldown[i] -= delta
+			if (Input.is_action_pressed(\"fire_left\") and leftWeaponCooldown[leftWeaponSelected] <= 0.0):
+				leftWeaponCooldown[leftWeaponSelected] = leftWeaponFireRate[leftWeaponSelected]
 				var node = global.bulletScene.instance()
 				node.parent_vel = vel
 				node.shooter_id = id
-				node.set_transform(leftWeaponNode.global_transform)
+				node.set_transform(leftWeaponNode[leftWeaponSelected].global_transform)
 				get_tree().get_root().add_child(node)
-		else:
-			leftWeaponCooldown -= delta
-		leftWeaponCooldownBar.value = (leftWeaponFireRate - leftWeaponCooldown) * 100 / leftWeaponFireRate 
+				
+		leftWeaponCooldownBar.value = (leftWeaponFireRate[leftWeaponSelected] - leftWeaponCooldown[leftWeaponSelected]) * 100 / leftWeaponFireRate[leftWeaponSelected]
 		
 	"
 
@@ -334,7 +366,7 @@ func _physics_process(delta):
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody"]
+[node name="KinematicBody" type="KinematicBody" index="0"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
@@ -477,7 +509,7 @@ anchor_bottom = 0.0
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 1004.0
-margin_bottom = 60.0
+margin_bottom = 78.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -493,7 +525,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 780.0
-margin_bottom = 40.0
+margin_bottom = 58.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -502,14 +534,33 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="TextureProgress" type="TextureProgress" parent="MarginContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 780.0
-margin_bottom = 40.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="TextureProgress" type="TextureProgress" parent="MarginContainer/HBoxContainer/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 780.0
+margin_bottom = 58.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -539,7 +590,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 784.0
 margin_right = 984.0
-margin_bottom = 40.0
+margin_bottom = 58.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
@@ -547,14 +598,34 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 alignment = 0
 
-[node name="TextureProgress2" type="TextureProgress" parent="MarginContainer/HBoxContainer/VBoxContainer2" index="0"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 200.0
-margin_bottom = 40.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "0"
+align = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="TextureProgress2" type="TextureProgress" parent="MarginContainer/HBoxContainer/VBoxContainer2" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 200.0
+margin_bottom = 58.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
 mouse_default_cursor_shape = 0
