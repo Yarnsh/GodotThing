@@ -7,10 +7,10 @@ path="res://.import/HITMAN_body.dae-1ecdf257b8b9d369aac7cf43967337b6.scn"
 [deps]
 
 source_file="res://Things/Mechs/Hitman/HITMAN_body.dae"
-source_md5="c52e756afa0046542fc7e6a0a66701ce"
+source_md5="081a3e2fa95045c82edd6dc8e41d185a"
 
 dest_files=[ "res://.import/HITMAN_body.dae-1ecdf257b8b9d369aac7cf43967337b6.scn" ]
-dest_md5="d357ee46295b2b04689b09d5b3fc8bf6"
+dest_md5="c1f5387fc1bab2555bc121adac1059c3"
 
 [params]
 

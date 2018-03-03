@@ -7,10 +7,10 @@ path="res://.import/Taurus_legs.dae-e1606814098bb209d83f7a3aff808ee4.scn"
 [deps]
 
 source_file="res://Things/Mechs/Taurus/Taurus_legs.dae"
-source_md5="34c48079e0892b911f768296bf3e3f09"
+source_md5="8de3138c21757fbd56dbff6f7b6b58b8"
 
 dest_files=[ "res://.import/Taurus_legs.dae-e1606814098bb209d83f7a3aff808ee4.scn" ]
-dest_md5="dfeae91d25025ca1bdcdd310d27b1cb4"
+dest_md5="294e41087665de08b357a312e0b4134f"
 
 [params]
 
