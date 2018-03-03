@@ -189,14 +189,6 @@ func _ready_nodes():
 func getId():
 	return id
 
-func closerDirVector(start, end, amount): #takes unit vectors only
-	var axis = start.cross(end)
-	if (!(axis.length_squared() > 0.0)):
-		axis = Vector3(0.0,1.0,0.0)
-	axis = axis.normalized()
-	var endQ = Quat(axis, min(amount, abs(start.angle_to(end))))
-	return endQ.xform(start)
-
 func _menu_exit():
 	is_ready = false
 	_build_mech()
@@ -243,7 +235,7 @@ func _physics_process(delta):
 				dir += Vector3(1,0,0).rotated(Vector3(0,1,0), camrot.y)
 		
 		dir = dir.normalized()
-		intentDir = closerDirVector(intentDir, dir, rotspeed)
+		intentDir = global.closerDirVector(intentDir, dir, rotspeed)
 		
 		if (dir.length_squared() > 0.0):
 			var proj = intentDir.dot(dir)
@@ -275,10 +267,10 @@ func _physics_process(delta):
 		
 		get_node(\"CameraSpatial\").rotation = camrot - Vector3(0.0, rotation.y, 0.0)
 		
-		yaw_torso_facing = closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y), torso_yawspeed)
+		yaw_torso_facing = global.closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y), torso_yawspeed)
 		var limited_pitch = max(camera_x, -pitch_limit)
 		limited_pitch = min(limited_pitch, pitch_limit)
-		pitch_torso_facing = closerDirVector(pitch_torso_facing, Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch), torso_pitchspeed)
+		pitch_torso_facing = global.closerDirVector(pitch_torso_facing, Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch), torso_pitchspeed)
 		
 		torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 		torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
@@ -342,7 +334,7 @@ func _physics_process(delta):
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true

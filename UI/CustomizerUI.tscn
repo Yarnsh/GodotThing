@@ -66,6 +66,12 @@ func _get_torso_path():
 		return \"res://Things/Mechs/Hitman/HITMAN_body.dae\"
 	else:
 		return \"res://Things/Mechs/AdamMk2/ADAMmk2_body.dae\"
+		
+func _get_leg_path():
+	if (legs_selection == \"Taurus\"):
+		return \"res://Things/Mechs/Taurus/Taurus_legs.dae\"
+	else:
+		return \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
 
 func _prepare_weapon_options():
 	var t = load(_get_torso_path()).instance()
@@ -164,6 +170,7 @@ func _ready():
 	legs.text = \"LEGS: \" + legs_selection
 	legspop = legs.get_popup()
 	legspop.add_item(\"ADAM Mk2\")
+	legspop.add_item(\"Taurus\")
 	legspop.connect(\"id_pressed\", self, \"_on_legs_pressed\")
 	
 	_prepare_weapon_options()
@@ -221,8 +228,7 @@ func _on_save_pressed():
 	
 	global.bodyPart = _get_torso_path()
 	
-	if (legs_selection == \"ADAM Mk2\"):
-		global.legPart = \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
+	global.legPart = _get_leg_path()
 	
 	global.color1 = CRect1.get_modulate()
 	global.color2 = CRect2.get_modulate()

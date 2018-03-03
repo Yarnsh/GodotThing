@@ -27,3 +27,11 @@ func getId():
 func _ready():
 	particles = preload("res://Particles.tscn")
 	bulletScene = preload("res://Bullet.tscn")
+
+func closerDirVector(start, end, amount): #takes unit vectors only
+	var axis = start.cross(end)
+	if (!(axis.length_squared() > 0.0)):
+		axis = Vector3(0.0,1.0,0.0)
+	axis = axis.normalized()
+	var endQ = Quat(axis, min(amount, abs(start.angle_to(end))))
+	return endQ.xform(start)
