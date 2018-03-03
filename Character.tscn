@@ -17,11 +17,14 @@ var is_ready = false
 var in_menu = false
 
 var camspeed = 0.005
-var accelspeed = 200
-var rotspeed = 0.05
-var deaccelspeed = 120
+var accelspeed = 30
+var rotspeed = 0.07
+var deaccelspeed = 50
 var vel = Vector3()
 var speedLimit = 30
+
+var intentSpeed = 10
+var intentDir = Vector3(0,0,-1)
 
 var leg_skeleton
 var torso_skeleton
@@ -238,10 +241,21 @@ func _physics_process(delta):
 			if (Input.is_action_pressed(\"move_right\")):
 				dir += Vector3(1,0,0).rotated(Vector3(0,1,0), camrot.y)
 		
-		dir = dir - (dir.dot(floorNormal) * floorNormal)
 		dir = dir.normalized()
+		intentDir = closerDirVector(intentDir, dir, rotspeed)
 		
-		var currentfacing = Vector3(0.0,0.0,-1.0).rotated(Vector3(0.0,1.0,0.0), rotation.y)
+		if (dir.length_squared() > 0.0):
+			var proj = intentDir.dot(dir)
+			if (proj > 0):
+				proj = proj * accelspeed
+			else:
+				proj = proj * deaccelspeed
+			intentSpeed = max(0, min(intentSpeed + proj*delta, speedLimit))
+		else:
+			intentSpeed = max(0, intentSpeed - deaccelspeed*delta)
+		
+		var floorDir = intentDir - (intentDir.dot(floorNormal) * floorNormal)
+		floorDir = floorDir.normalized() #not sure if will use this or not
 		
 		if (get_node(\"CameraSpatial/ViewRay\").is_colliding()):
 			get_node(\"CameraSpatial/ViewRay/Camera\").translation = get_node(\"CameraSpatial/ViewRay\").to_local(get_node(\"CameraSpatial/ViewRay\").get_collision_point())
@@ -255,12 +269,9 @@ func _physics_process(delta):
 			if (camera_ray_colliding):
 				camera_ray_point = get_node(\"CameraSpatial/ViewRay/Camera/RayCast\").get_collision_point()
 		
-		if (dir.length_squared() > 0.0):
-			#if (!animPlayer.is_playing()): animPlayer.play(\"Walk\")
-			if (currentfacing.length_squared() > 0.0):
-				look_at(translation + closerDirVector(currentfacing, Vector3(dir.x, 0, dir.z), 0.1), Vector3(0.0,1.0,0.0))
-		else:
-			pass#animPlayer.play(\"Idle\")
+		if (intentDir.length_squared() > 0.0):
+			look_at(translation + intentDir, Vector3(0.0,1.0,0.0))
+		
 		get_node(\"CameraSpatial\").rotation = camrot - Vector3(0.0, rotation.y, 0.0)
 		
 		yaw_torso_facing = closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y), torso_yawspeed)
@@ -275,24 +286,21 @@ func _physics_process(delta):
 			leftWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
 			rightWeaponNode.look_at(camera_ray_point, Vector3(0,1,0));
 		
-		was_on_floor = false
-		if (is_on_floor() or my_is_on_floor):
-			my_is_on_floor = true
-			was_on_floor = true
-			var speed = max(0.0, vel.length() - deaccelspeed * delta)
-			vel = vel.normalized()*speed
-			var new_vel = vel + (dir*accelspeed*delta)
-			if (vel.length() < speedLimit):
-				if (new_vel.length() > speedLimit):
-					vel = vel.normalized() * speedLimit
-				else:
-					vel = new_vel
+		var stick = false
+		if (floorStickRay.is_colliding()):
+			stick = true
+			move_and_collide(Vector3(0,-10,0))
+		if (is_on_floor() or stick):
+			vel = intentDir * intentSpeed
+			move_and_slide(vel,Vector3(0,1,0))
 			
-			animPlayer.blend3_node_set_amount(\"walkBlend\", min(1.0, -1.0 + (2*speed/speedLimit)))
+			animPlayer.blend3_node_set_amount(\"walkBlend\", min(1.0, -1.0 + (2*intentSpeed/speedLimit)))
 		else :
+			vel += Vector3(0,-9.8*delta,0)
+			vel = move_and_slide(vel,Vector3(0,1,0))
+			
 			animPlayer.blend3_node_set_amount(\"walkBlend\", -1.0)
 		
-		vel += Vector3(0,-9.8*delta,0)
 		
 		if (!in_menu and rightWeaponCooldown <= 0.0):
 			if (Input.is_action_pressed(\"fire_right\")):
@@ -318,26 +326,6 @@ func _physics_process(delta):
 			leftWeaponCooldown -= delta
 		leftWeaponCooldownBar.value = (leftWeaponFireRate - leftWeaponCooldown) * 100 / leftWeaponFireRate 
 		
-		vel = move_and_slide(vel,Vector3(0,1,0))
-		my_is_on_floor = false
-		
-		if (get_slide_count() > 0):
-			floorNormal = Vector3(0,0,0)
-			var i = 0
-			while (i < get_slide_count()):
-				floorNormal += get_slide_collision(i).normal
-				i += 1
-			floorNormal = floorNormal.normalized()
-		else:
-			floorNormal = Vector3(0,1,0)
-		
-		if (!is_on_floor() and was_on_floor):
-			floorStickRay.force_raycast_update()
-			if (floorStickRay.is_colliding()):
-				if (floorStickRay.get_collision_normal().angle_to(Vector3(0,1,0)) <= 0.785398):
-					move_and_collide(Vector3(0,-20,0))
-					floorNormal = floorStickRay.get_collision_normal()
-					my_is_on_floor = true
 	"
 
 [sub_resource type="CapsuleShape" id=2]
@@ -345,7 +333,7 @@ func _physics_process(delta):
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody"]
+[node name="KinematicBody" type="KinematicBody" index="0"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
@@ -429,15 +417,21 @@ data = {
 "connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim",
 "position": Vector2( 80, 67 ),
 "type": "animation"
 }, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
+"animation": null,
+"filter": [  ],
+"id": "anim 3",
+"position": Vector2( 78, 299 ),
+"type": "animation"
 }, {
 "blend": -1.0,
 "id": "walkBlend",
@@ -448,12 +442,6 @@ data = {
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
-"type": "animation"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim 3",
-"position": Vector2( 78, 299 ),
 "type": "animation"
 } ]
 }

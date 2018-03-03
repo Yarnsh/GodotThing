@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-global="*res://global.gd"
+global="*res://Scripts/global.gd"
 
 [importer_defaults]
 
