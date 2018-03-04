@@ -61,20 +61,11 @@ func _on_color1_change(value):
 func _on_color2_change(value):
 	CRect2.set_modulate(Color(R2.get_value(), G2.get_value(), B2.get_value()))
 
-func _get_torso_path():
-	if (torso_selection == \"HITMAN\"):
-		return \"res://Things/Mechs/Hitman/HITMAN_body.dae\"
-	else:
-		return \"res://Things/Mechs/AdamMk2/ADAMmk2_body.dae\"
-		
-func _get_leg_path():
-	if (legs_selection == \"Taurus\"):
-		return \"res://Things/Mechs/Taurus/Taurus_legs.dae\"
-	else:
-		return \"res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae\"
-
 func _prepare_weapon_options():
-	var t = load(_get_torso_path()).instance()
+	var t
+	for torso in global.TORSOS:
+		if (torso_selection == torso.name):
+			t = load(torso.path).instance()
 	var skeleton = t.get_node(\"body_armature/Skeleton\")
 	left_weps = 0;
 	right_weps = 0;
@@ -220,9 +211,13 @@ func _on_save_pressed():
 			if (lwep_selection[i] == weapon.name):
 				global.lWepPart.append(weapon)
 	
-	global.bodyPart = _get_torso_path()
+	for torso in global.TORSOS:
+		if (torso_selection == torso.name):
+			global.bodyPart = torso
 	
-	global.legPart = _get_leg_path()
+	for legs in global.LEGS:
+		if (legs_selection == legs.name):
+			global.legPart = legs
 	
 	global.color1 = CRect1.get_modulate()
 	global.color2 = CRect2.get_modulate()
@@ -233,7 +228,7 @@ func _on_save_pressed():
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
 
-[node name="MarginContainer" type="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0

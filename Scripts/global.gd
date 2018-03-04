@@ -13,8 +13,18 @@ var WEAPONS = [
 	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/STANDARD_howitzer.dae", 1.2)
 ]
 
-var bodyPart = "res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"
-var legPart = "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"
+var LEGS = [
+	load("res://Scripts/legs.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"),
+	load("res://Scripts/legs.gd").new("Taurus", "res://Things/Mechs/Taurus/Taurus_legs.dae")
+]
+
+var TORSOS = [
+	load("res://Scripts/torso.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"),
+	load("res://Scripts/torso.gd").new("HITMAN", "res://Things/Mechs/Hitman/HITMAN_body.dae")
+]
+
+var bodyPart = TORSOS[0]
+var legPart = LEGS[0]
 var lWepPart = [WEAPONS[0]]
 var rWepPart = [WEAPONS[0]]
 

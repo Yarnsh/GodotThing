@@ -46,6 +46,7 @@ var leftWeaponNode = []
 var leftWeaponTransform = []
 var leftWeaponFireRate = []
 var leftWeaponCooldown = []
+var leftWeaponAnimationNode = []
 onready var leftWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer/TextureProgress
 
 var rightWeaponSelected = 0
@@ -53,6 +54,7 @@ var rightWeaponNode = []
 var rightWeaponTransform = []
 var rightWeaponFireRate = []
 var rightWeaponCooldown = []
+var rightWeaponAnimationNode = []
 onready var rightWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer2/TextureProgress2
 
 var camrot = Vector3()
@@ -75,7 +77,7 @@ func _build_mech():
 		legs.name = \"oldlegs\"
 		legs.call_deferred(\"free\")
 	
-	legs = load(global.legPart).instance()
+	legs = load(global.legPart.path).instance()
 	base_node.add_child(legs)
 	var legs_skel = legs.get_node(\"leg_armature/Skeleton\")
 	var t_attach = BoneAttachment.new()
@@ -83,7 +85,7 @@ func _build_mech():
 	legs_skel.add_child(t_attach)
 	t_attach.set_bone_name(\"WaistConnection\")
 	
-	var torso = load(global.bodyPart).instance()
+	var torso = load(global.bodyPart.path).instance()
 	t_attach.add_child(torso)
 	var torso_skel = torso.get_node(\"body_armature/Skeleton\")
 	
@@ -93,12 +95,14 @@ func _build_mech():
 	leftWeaponTransform = []
 	leftWeaponFireRate = []
 	leftWeaponCooldown = []
+	leftWeaponAnimationNode = []
 	leftWeaponSelected = 0
 	get_node(\"MarginContainer/HBoxContainer/VBoxContainer/Label\").text = String(leftWeaponSelected)
 	rightWeaponNode = []
 	rightWeaponTransform = []
 	rightWeaponFireRate = []
 	rightWeaponCooldown = []
+	rightWeaponAnimationNode = []
 	rightWeaponSelected = 0
 	get_node(\"MarginContainer/HBoxContainer/VBoxContainer2/Label\").text = String(rightWeaponSelected)
 	for i in range(0, torso_skel.get_bone_count()):
@@ -109,12 +113,14 @@ func _build_mech():
 			leftWeaponTransform.append(Transform())
 			leftWeaponFireRate.append(1.0)
 			leftWeaponCooldown.append(0.0)
+			leftWeaponAnimationNode.append(null)
 		else: if (name.begins_with(\"armW.R\")):
 			rightWeps.append(name)
 			rightWeaponNode.append(null)
 			rightWeaponTransform.append(Transform())
 			rightWeaponFireRate.append(1.0)
 			rightWeaponCooldown.append(0.0)
+			rightWeaponAnimationNode.append(null)
 	
 	for lname in leftWeps:
 		var lw_attach = BoneAttachment.new()
@@ -130,6 +136,7 @@ func _build_mech():
 		leftWeaponCooldown[index] = leftWeaponFireRate[index]
 		if (l_wep_part != null):
 			lspatial.add_child(l_wep_part.instance())
+			leftWeaponAnimationNode[index] = lspatial.get_node(\"Scene Root/AnimationPlayer\")
 	
 	for rname in rightWeps:
 		var rw_attach = BoneAttachment.new()
@@ -145,6 +152,7 @@ func _build_mech():
 		rightWeaponCooldown[index] = rightWeaponFireRate[index]
 		if (r_wep_part != null):
 			rspatial.add_child(r_wep_part.instance())
+			rightWeaponAnimationNode[index] = rspatial.get_node(\"Scene Root/AnimationPlayer\")
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
 	
 	_ready_nodes()
@@ -347,6 +355,7 @@ func _physics_process(delta):
 				node.shooter_id = id
 				node.set_transform(rightWeaponNode[rightWeaponSelected].global_transform)
 				get_tree().get_root().add_child(node)
+				if (rightWeaponAnimationNode[rightWeaponSelected] != null): rightWeaponAnimationNode[rightWeaponSelected].play(\"Fire\")
 				
 		rightWeaponCooldownBar.value = (rightWeaponFireRate[rightWeaponSelected] - rightWeaponCooldown[rightWeaponSelected]) * 100 / rightWeaponFireRate[rightWeaponSelected]
 		
@@ -360,6 +369,7 @@ func _physics_process(delta):
 				node.shooter_id = id
 				node.set_transform(leftWeaponNode[leftWeaponSelected].global_transform)
 				get_tree().get_root().add_child(node)
+				if (leftWeaponAnimationNode[leftWeaponSelected] != null): leftWeaponAnimationNode[leftWeaponSelected].play(\"Fire\")
 				
 		leftWeaponCooldownBar.value = (leftWeaponFireRate[leftWeaponSelected] - leftWeaponCooldown[leftWeaponSelected]) * 100 / leftWeaponFireRate[leftWeaponSelected]
 		
@@ -451,13 +461,18 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
+"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
+"animation": null,
+"filter": [  ],
+"id": "anim",
+"position": Vector2( 80, 67 ),
+"type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 }, {
 "animation": null,
 "filter": [  ],
@@ -471,15 +486,10 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
-"animation": null,
-"filter": [  ],
-"id": "anim",
-"position": Vector2( 80, 67 ),
-"type": "animation"
-}, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
