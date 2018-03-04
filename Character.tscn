@@ -47,6 +47,7 @@ var leftWeaponTransform = []
 var leftWeaponFireRate = []
 var leftWeaponCooldown = []
 var leftWeaponAnimationNode = []
+var leftWeaponBarrel = []
 onready var leftWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer/TextureProgress
 
 var rightWeaponSelected = 0
@@ -55,6 +56,7 @@ var rightWeaponTransform = []
 var rightWeaponFireRate = []
 var rightWeaponCooldown = []
 var rightWeaponAnimationNode = []
+var rightWeaponBarrel = []
 onready var rightWeaponCooldownBar = $MarginContainer/HBoxContainer/VBoxContainer2/TextureProgress2
 
 var camrot = Vector3()
@@ -96,6 +98,7 @@ func _build_mech():
 	leftWeaponFireRate = []
 	leftWeaponCooldown = []
 	leftWeaponAnimationNode = []
+	leftWeaponBarrel = []
 	leftWeaponSelected = 0
 	get_node(\"MarginContainer/HBoxContainer/VBoxContainer/Label\").text = String(leftWeaponSelected)
 	rightWeaponNode = []
@@ -103,6 +106,7 @@ func _build_mech():
 	rightWeaponFireRate = []
 	rightWeaponCooldown = []
 	rightWeaponAnimationNode = []
+	rightWeaponBarrel = []
 	rightWeaponSelected = 0
 	get_node(\"MarginContainer/HBoxContainer/VBoxContainer2/Label\").text = String(rightWeaponSelected)
 	for i in range(0, torso_skel.get_bone_count()):
@@ -114,6 +118,7 @@ func _build_mech():
 			leftWeaponFireRate.append(1.0)
 			leftWeaponCooldown.append(0.0)
 			leftWeaponAnimationNode.append(null)
+			leftWeaponBarrel.append(null)
 		else: if (name.begins_with(\"armW.R\")):
 			rightWeps.append(name)
 			rightWeaponNode.append(null)
@@ -121,6 +126,7 @@ func _build_mech():
 			rightWeaponFireRate.append(1.0)
 			rightWeaponCooldown.append(0.0)
 			rightWeaponAnimationNode.append(null)
+			rightWeaponBarrel.append(null)
 	
 	for lname in leftWeps:
 		var lw_attach = BoneAttachment.new()
@@ -136,6 +142,11 @@ func _build_mech():
 		leftWeaponCooldown[index] = leftWeaponFireRate[index]
 		if (l_wep_part != null):
 			lspatial.add_child(l_wep_part.instance())
+			var sk = lspatial.get_child(0).get_child(0).get_child(0)
+			leftWeaponBarrel[index] = BoneAttachment.new()
+			leftWeaponBarrel[index].name = \"BarrelAttach\"
+			leftWeaponBarrel[index].set_bone_name(\"Fire0\")
+			sk.add_child(leftWeaponBarrel[index])
 			leftWeaponAnimationNode[index] = lspatial.get_node(\"Scene Root/AnimationPlayer\")
 	
 	for rname in rightWeps:
@@ -152,8 +163,13 @@ func _build_mech():
 		rightWeaponCooldown[index] = rightWeaponFireRate[index]
 		if (r_wep_part != null):
 			rspatial.add_child(r_wep_part.instance())
-			rightWeaponAnimationNode[index] = rspatial.get_node(\"Scene Root/AnimationPlayer\")
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
+			var sk = rspatial.get_child(0).get_child(0).get_child(0)
+			rightWeaponBarrel[index] = BoneAttachment.new()
+			rightWeaponBarrel[index].name = \"BarrelAttach\"
+			rightWeaponBarrel[index].set_bone_name(\"Fire0\")
+			sk.add_child(rightWeaponBarrel[index])
+			rightWeaponAnimationNode[index] = rspatial.get_node(\"Scene Root/AnimationPlayer\")
 	
 	_ready_nodes()
 	
@@ -353,7 +369,8 @@ func _physics_process(delta):
 				var node = global.bulletScene.instance()
 				node.parent_vel = vel
 				node.shooter_id = id
-				node.set_transform(rightWeaponNode[rightWeaponSelected].global_transform)
+				node.set_transform(rightWeaponBarrel[rightWeaponSelected].global_transform)
+				node.set_scale(Vector3(-1,1,-1))
 				get_tree().get_root().add_child(node)
 				if (rightWeaponAnimationNode[rightWeaponSelected] != null): rightWeaponAnimationNode[rightWeaponSelected].play(\"Fire\")
 				
@@ -367,7 +384,7 @@ func _physics_process(delta):
 				var node = global.bulletScene.instance()
 				node.parent_vel = vel
 				node.shooter_id = id
-				node.set_transform(leftWeaponNode[leftWeaponSelected].global_transform)
+				node.set_transform(leftWeaponBarrel[leftWeaponSelected].global_transform)
 				get_tree().get_root().add_child(node)
 				if (leftWeaponAnimationNode[leftWeaponSelected] != null): leftWeaponAnimationNode[leftWeaponSelected].play(\"Fire\")
 				
