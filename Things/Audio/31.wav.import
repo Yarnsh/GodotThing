@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/31.wav-4001c2906e09730c89d51e2f3d1031b8.sample"
+
+[deps]
+
+source_file="res://Things/Audio/31.wav"
+source_md5="f3c108e8ef8793e9e4eb94caf785d65d"
+
+dest_files=[ "res://.import/31.wav-4001c2906e09730c89d51e2f3d1031b8.sample" ]
+dest_md5="78c3d0dd38d479d046756fd151959ac2"
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

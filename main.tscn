@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://TestMap2/Terrain.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Things/Audio/Mobile Suit Gundam - Opening.ogg" type="AudioStream" id=3]
 
 [node name="Main" type="Node"]
 
@@ -41,5 +42,13 @@ _sections_unfolded = [ "Directional Shadow", "Light", "Shadow" ]
 [node name="Terrain" parent="." index="2" instance=ExtResource( 2 )]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52652, 1.31018, 1.94702 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="3"]
+
+stream = ExtResource( 3 )
+volume_db = -10.0
+autoplay = true
+mix_target = 0
+bus = "Master"
 
 
