@@ -9,8 +9,8 @@ var currentNav
 
 var WEAPONS = [
 	load("res://Scripts/weapon.gd").new("NONE", "NONE", 99999.0),
-	load("res://Scripts/weapon.gd").new("Gattling Gun", "res://Things/Weapons/STANDARD_gattlinggun.dae", 0.083),
-	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/STANDARD_howitzer.dae", 1.2)
+	load("res://Scripts/weapon.gd").new("Gattling Gun", "res://Things/Weapons/GattlingGun.tscn", 0.083),
+	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/Howitzer.tscn", 1.2)
 ]
 
 var LEGS = [

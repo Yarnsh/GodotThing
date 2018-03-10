@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Things/Weapons/STANDARD_howitzer.dae" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Spatial
+
+onready var animNode = $AnimationPlayer
+onready var fireNode = $howitzer/Skeleton/BoneAttachment
+
+func _ready():
+	# Called every time the node is added to the scene.
+	# Initialization here
+	pass
+
+func fire(id, is_flipped = false):
+	var node = global.bulletScene.instance()
+	node.parent_vel = Vector3(0,0,0)
+	node.shooter_id = id
+	node.set_transform(fireNode.global_transform)
+	if (is_flipped): node.set_scale(Vector3(-1,1,-1))
+	get_tree().get_root().add_child(node)
+	animNode.play(\"Fire\")"
+
+[node name="Scene Root" instance=ExtResource( 1 )]
+
+script = SubResource( 1 )
+
+[node name="BoneAttachment" type="BoneAttachment" parent="howitzer/Skeleton" index="1"]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.729654, 0.00305337, -5.8211 )
+bone_name = "Fire0"
+
+
