@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/effect00.wav-90404a0fda78f4ca8f847764f08ee451.sample"
+
+[deps]
+
+source_file="res://Things/Audio/effect00.wav"
+source_md5="e21fc87a95e9710846eaed218a3b3647"
+
+dest_files=[ "res://.import/effect00.wav-90404a0fda78f4ca8f847764f08ee451.sample" ]
+dest_md5="66af935fc471c585af954acba6d9e59d"
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

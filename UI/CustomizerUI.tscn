@@ -228,7 +228,7 @@ func _on_save_pressed():
 	hide()
 	get_node(\"..\").emit_signal(\"exited_menu\")"
 
-[node name="MarginContainer" type="MarginContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer"]
 
 anchor_left = 0.0
 anchor_top = 0.0

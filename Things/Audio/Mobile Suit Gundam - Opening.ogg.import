@@ -1,0 +1,18 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Mobile Suit Gundam - Opening.ogg-623ce1729ddf925ad095506679966368.oggstr"
+
+[deps]
+
+source_file="res://Things/Audio/Mobile Suit Gundam - Opening.ogg"
+source_md5="20c6bbf2fd0133b3a914065910276330"
+
+dest_files=[ "res://.import/Mobile Suit Gundam - Opening.ogg-623ce1729ddf925ad095506679966368.oggstr" ]
+dest_md5="697f22e460e0ecd8157fde99513cca40"
+
+[params]
+
+loop=true
+loop_offset=0
