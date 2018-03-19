@@ -5,7 +5,7 @@
 [ext_resource path="res://Things/Audio/Mobile Suit Gundam - Opening.ogg" type="AudioStream" id=3]
 [ext_resource path="res://Things/Mechs/Mech.tscn" type="PackedScene" id=4]
 
-[node name="Main" type="Node" index="0"]
+[node name="Main" type="Node"]
 
 [node name="Player" parent="." index="0" instance=ExtResource( 1 )]
 

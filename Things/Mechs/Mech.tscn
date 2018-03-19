@@ -4,8 +4,6 @@
 
 script/source = "extends KinematicBody
 
-signal exited_menu
-
 var id = -1
 var is_ready = false
 
@@ -60,24 +58,29 @@ var camera_x = 0.0
 var camera_ray_colliding = false
 var camera_ray_point = Vector3(0,0,0)
 
-func buildMech():
+var mat1 = SpatialMaterial.new()
+var mat2 = SpatialMaterial.new()
+
+func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2, pattern2):
 	var base_node = get_node(\"Model\")
 	var legs = get_node(\"Model/Scene Root\")
 	if (legs != null):
 		legs.name = \"oldlegs\"
 		legs.call_deferred(\"free\")
 	
-	legs = load(global.legPart.path).instance()
+	legs = load(legPart.path).instance()
 	base_node.add_child(legs)
 	var legs_skel = legs.get_node(\"leg_armature/Skeleton\")
+	legs_skel.get_child(0).set_mesh(legs_skel.get_child(0).get_mesh().duplicate())
 	var t_attach = BoneAttachment.new()
 	t_attach.name = \"TorsoAttach\"
 	legs_skel.add_child(t_attach)
 	t_attach.set_bone_name(\"WaistConnection\")
 	
-	var torso = load(global.bodyPart.path).instance()
+	var torso = load(bodyPart.path).instance()
 	t_attach.add_child(torso)
 	var torso_skel = torso.get_node(\"body_armature/Skeleton\")
+	torso_skel.get_child(0).set_mesh(torso_skel.get_child(0).get_mesh().duplicate())
 	
 	var leftWeps = []
 	var rightWeps = []
@@ -113,8 +116,8 @@ func buildMech():
 		var lspatial = Spatial.new()
 		lspatial.name = \"Spatial\"
 		lw_attach.add_child(lspatial)
-		var l_wep_part = load(global.lWepPart[index].path)
-		leftWeaponFireRate[index] = global.lWepPart[index].fireRate
+		var l_wep_part = load(lWepParts[index].path)
+		leftWeaponFireRate[index] = lWepParts[index].fireRate
 		leftWeaponCooldown[index] = leftWeaponFireRate[index]
 		if (l_wep_part != null):
 			lspatial.add_child(l_wep_part.instance())
@@ -128,8 +131,8 @@ func buildMech():
 		var rspatial = Spatial.new()
 		rspatial.name = \"Spatial\"
 		rw_attach.add_child(rspatial)
-		var r_wep_part = load(global.rWepPart[index].path)
-		rightWeaponFireRate[index] = global.rWepPart[index].fireRate
+		var r_wep_part = load(rWepParts[index].path)
+		rightWeaponFireRate[index] = rWepParts[index].fireRate
 		rightWeaponCooldown[index] = rightWeaponFireRate[index]
 		if (r_wep_part != null):
 			rspatial.add_child(r_wep_part.instance())
@@ -137,41 +140,30 @@ func buildMech():
 	
 	_ready_nodes()
 	
-	var pattern = load(global.pattern1)
+	var pattern = load(pattern1)
 	#color 1
 	var meshNode = leg_skeleton.get_child(0)
 	var mesh = meshNode.get_mesh()
-	var mat = mesh.surface_get_material(1)
-	mat.set_albedo(global.color1)
-	mat.albedo_texture = pattern
-	mesh.surface_set_material(1, mat)
-	meshNode.set_mesh(mesh)
+	mat1.set_albedo(color1)
+	mat1.albedo_texture = pattern
+	mesh.surface_set_material(1, mat1)
 	
 	meshNode = torso_skeleton.get_child(0)
 	mesh = meshNode.get_mesh()
-	mat = mesh.surface_get_material(1)
-	mat.set_albedo(global.color1)
-	mat.albedo_texture = pattern
-	mesh.surface_set_material(1, mat)
+	mesh.surface_set_material(1, mat1)
 	meshNode.set_mesh(mesh)
 	
-	pattern = load(global.pattern2)
+	pattern = load(pattern2)
 	#color 2
 	meshNode = leg_skeleton.get_child(0)
 	mesh = meshNode.get_mesh()
-	mat = mesh.surface_get_material(2)
-	mat.set_albedo(global.color2)
-	mat.albedo_texture = pattern
-	mesh.surface_set_material(2, mat)
-	meshNode.set_mesh(mesh)
+	mat2.set_albedo(color2)
+	mat2.albedo_texture = pattern
+	mesh.surface_set_material(2, mat2)
 	
 	meshNode = torso_skeleton.get_child(0)
 	mesh = meshNode.get_mesh()
-	mat = mesh.surface_get_material(2)
-	mat.set_albedo(global.color2)
-	mat.albedo_texture = pattern
-	mesh.surface_set_material(2, mat)
-	meshNode.set_mesh(mesh)
+	mesh.surface_set_material(2, mat2)
 
 func _ready_nodes():
 	leg_skeleton = get_node(\"Model/Scene Root/leg_armature/Skeleton\")
@@ -203,19 +195,12 @@ func _ready_nodes():
 func getId():
 	return id
 
-func _menu_exit(): #temp thing to allow in level customization
-	is_ready = false
-	buildMech()
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	in_menu = false
-
 func _ready():
 	
-	buildMech()
+	buildMech(global.LEGS[0], global.TORSOS[0], {0:global.WEAPONS[0]}, {0:global.WEAPONS[0]}, Color(0,0,0), \"res://Things/Patterns/plain.png\", Color(0,0,0), \"res://Things/Patterns/plain.png\")
 	
 	id = global.getId()
 	
-	connect(\"exited_menu\", self, \"_menu_exit\")
 
 func nextLeftWeapon():
 	leftWeaponSelected = (leftWeaponSelected + 1) % leftWeaponNode.size()
@@ -308,7 +293,7 @@ func fireLeft():
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody"]
+[node name="KinematicBody" type="KinematicBody" index="0"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
