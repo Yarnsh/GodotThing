@@ -6,6 +6,7 @@ var next_id = 0
 var particles
 var bulletScene
 var currentNav
+var player
 
 var WEAPONS = [
 	load("res://Scripts/weapon.gd").new("NONE", "NONE", 99999.0),

@@ -215,6 +215,7 @@ func getRightWeapon():
 func _physics_process(delta):
 	if (is_ready):
 		
+		dir = Vector3(dir.x, 0, dir.z)
 		dir = dir.normalized()
 		intentDir = global.closerDirVector(intentDir, dir, rotspeed)
 		
@@ -293,13 +294,13 @@ func fireLeft():
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
 input_capture_on_drag = false
 collision_layer = 2
-collision_mask = 1
+collision_mask = 3
 axis_lock_linear_x = false
 axis_lock_linear_y = false
 axis_lock_linear_z = false
@@ -336,9 +337,19 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
+"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
+}, {
+"animation": null,
+"filter": [  ],
+"id": "anim",
+"position": Vector2( 80, 67 ),
+"type": "animation"
+}, {
 "blend": -1.0,
 "id": "walkBlend",
 "position": Vector2( 345, 96 ),
@@ -354,16 +365,6 @@ data = {
 "filter": [  ],
 "id": "anim 3",
 "position": Vector2( 78, 299 ),
-"type": "animation"
-}, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim",
-"position": Vector2( 80, 67 ),
 "type": "animation"
 } ]
 }

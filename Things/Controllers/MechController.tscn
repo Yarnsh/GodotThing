@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Things/Mechs/Mech.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node
+
+var move = false
+var target = Vector3(0,6,200)
+var path = [Vector3(-100,10,200)]
+
+onready var mech = $KinematicBody
+
+func setPath(p):
+	path = p
+	target = p.pop_front()
+	move = true
+
+func setTarget(t):
+	target = t
+	move = true
+
+func _ready():
+	mech.translate(Vector3(0,20,0))
+	mech.dir = Vector3(1,0,0);
+
+func _physics_process(delta):
+	if (Input.is_action_pressed(\"to_me_test\")):
+		var me = global.currentNav.get_closest_point(get_child(0).global_transform.origin)
+		var him = global.currentNav.get_closest_point(global.player.get_child(0).global_transform.origin)
+		setPath(Array(global.currentNav.get_simple_path(me, him)))
+	
+	if (move):
+		mech.dir = target - global.currentNav.get_closest_point(mech.translation)
+		if (mech.dir.length() < 2.0):
+			if (path.empty()):
+				move = false
+			else:
+				target = path.pop_front()
+	else:
+		mech.dir = Vector3()"
+
+[node name="MechController" type="Node" index="0"]
+
+script = SubResource( 1 )
+
+[node name="KinematicBody" parent="." index="0" instance=ExtResource( 1 )]
+
+
