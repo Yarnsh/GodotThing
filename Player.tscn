@@ -22,6 +22,11 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	connect(\"exited_menu\", self, \"_menu_exit\")
+	
+	if (is_in_group(\"friendly\")):
+		add_to_group(\"friendly_ready\")
+	if (is_in_group(\"enemy\")):
+		add_to_group(\"enemy_ready\")
 
 func _menu_exit():
 	#is_ready = false
@@ -78,7 +83,12 @@ func _process(delta):
 			Mech.camera_y = Cam.rotation.y
 			Mech.camera_x = Cam.rotation.x
 	
-	Mech.dir = dir"
+	Mech.dir = dir
+
+func getAimPos():
+	return Mech.global_transform.origin + Vector3(0.0,8.0,0.0)
+func getPos():
+	return Mech.global_transform.origin"
 
 [node name="Player" type="Node"]
 

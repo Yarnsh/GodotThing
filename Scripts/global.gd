@@ -24,8 +24,8 @@ var TORSOS = [
 	load("res://Scripts/torso.gd").new("HITMAN", "res://Things/Mechs/Hitman/HITMAN_body.dae")
 ]
 
-var bodyPart = TORSOS[0]
-var legPart = LEGS[0]
+var bodyPart = 0
+var legPart = 0
 var lWepPart = [WEAPONS[0]]
 var rWepPart = [WEAPONS[0]]
 

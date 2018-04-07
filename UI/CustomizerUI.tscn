@@ -211,13 +211,17 @@ func _on_save_pressed():
 			if (lwep_selection[i] == weapon.name):
 				global.lWepPart.append(weapon)
 	
+	var i = 0
 	for torso in global.TORSOS:
 		if (torso_selection == torso.name):
-			global.bodyPart = torso
+			global.bodyPart = i
+		i += 1
 	
+	i = 0
 	for legs in global.LEGS:
 		if (legs_selection == legs.name):
-			global.legPart = legs
+			global.legPart = i
+		i += 1
 	
 	global.color1 = CRect1.get_modulate()
 	global.color2 = CRect2.get_modulate()

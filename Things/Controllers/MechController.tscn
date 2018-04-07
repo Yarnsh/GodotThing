@@ -1,50 +1,142 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://Things/Mechs/Mech.tscn" type="PackedScene" id=1]
+[gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
 
 script/source = "extends Node
 
+var ai_thread
+
+var is_enemy
+
 var move = false
-var target = Vector3(0,6,200)
+var move_point = Vector3(0,6,200)
+var aim = false
+var aim_target = null
+var aim_point = Vector3(0,0,0)
 var path = [Vector3(-100,10,200)]
 
+var cdist = 30.0
+
 onready var mech = $KinematicBody
+onready var spatial = $Spatial
+onready var ray = $RayCast
 
 func setPath(p):
 	path = p
-	target = p.pop_front()
+	p.pop_front()
+	move_point = p.pop_front()
 	move = true
 
-func setTarget(t):
-	target = t
+func setMovePoint(p):
+	var me = global.currentNav.get_closest_point(get_child(1).global_transform.origin)
+	setPath(Array(global.currentNav.get_simple_path(me, p)))
 	move = true
+
+func setAimPoint(p):
+	aim_target = null
+	aim_point = p
+	aim = true
+
+func setAimTarget(t):
+	aim_target = t
+	aim = true
 
 func _ready():
-	mech.translate(Vector3(0,20,0))
+	is_enemy = is_in_group(\"enemy\")
 	mech.dir = Vector3(1,0,0);
+	
+	ai_thread = Thread.new()
+	ai_thread.start(self, \"_ai_process\")
+	add_child(ai_thread)
+	
+	if (is_in_group(\"friendly\")):
+		add_to_group(\"friendly_ready\")
+	if (is_in_group(\"enemy\")):
+		add_to_group(\"enemy_ready\")
+
+func _aim_at_point(point):
+	spatial.look_at_from_position(getAimPos(), point, Vector3(0,1,0))
+	var r = spatial.rotation - mech.rotation;
+	mech.camera_x = r.x
+	mech.camera_y = r.y
+
+func _aim_at_target(target):
+	_aim_at_point(target.getAimPos())
+
+func _ai_process(par):
+	while(true):
+		var adversaries
+		if (is_enemy):
+			adversaries = get_tree().get_nodes_in_group(\"friendly_ready\")
+		else:
+			adversaries = get_tree().get_nodes_in_group(\"enemy_ready\")
+		#check for visibility later, and do more logic
+		for a in adversaries:
+			if (checkVisibility(a)):
+				setAimTarget(a)
+				var v = (getPos() - a.getPos()).normalized()
+				var v2 = a.getPos() + Vector3(v.x*cdist, v.y*cdist, v.z*cdist)
+				print(v2)
+				setMovePoint(v2)
+		
+		OS.delay_msec(250)
 
 func _physics_process(delta):
-	if (Input.is_action_pressed(\"to_me_test\")):
-		var me = global.currentNav.get_closest_point(get_child(0).global_transform.origin)
-		var him = global.currentNav.get_closest_point(global.player.get_child(0).global_transform.origin)
-		setPath(Array(global.currentNav.get_simple_path(me, him)))
+	#if (Input.is_action_pressed(\"to_me_test\")):
+	#	var me = global.currentNav.get_closest_point(get_child(1).global_transform.origin)
+	#	var him = global.currentNav.get_closest_point(global.player.get_child(0).global_transform.origin)
+	#	setAimTarget(global.player)
+	#	setPath(Array(global.currentNav.get_simple_path(me, him)))
 	
 	if (move):
-		mech.dir = target - global.currentNav.get_closest_point(mech.translation)
+		mech.dir = move_point - global.currentNav.get_closest_point(mech.translation)
 		if (mech.dir.length() < 2.0):
 			if (path.empty()):
 				move = false
 			else:
-				target = path.pop_front()
+				move_point = path.pop_front()
 	else:
-		mech.dir = Vector3()"
+		mech.dir = Vector3()
+	
+	if (aim):
+		if (aim_target != null):
+			_aim_at_target(aim_target)
+		else:
+			_aim_at_point(aim_point)
+	else:
+		mech.camera_x = 0
+		mech.camera_y = 0
+	
+	#if aiming at enemy and in good range and stuff
+	mech.fireRight()
+	mech.fireLeft()
+
+func checkVisibility(other, distance = -1):
+	var x = false
+	if (distance < 0 || (other.getAimPos() - getAimPos()).length() <= distance):
+		ray.translation = getAimPos()
+		ray.cast_to = other.getAimPos() - getAimPos()
+		ray.force_raycast_update()
+		x = !ray.is_colliding()
+	return x
+
+func getAimPos():
+	return mech.global_transform.origin + Vector3(0.0,8.0,0.0)
+func getPos():
+	return mech.global_transform.origin"
 
 [node name="MechController" type="Node" index="0"]
 
 script = SubResource( 1 )
 
-[node name="KinematicBody" parent="." index="0" instance=ExtResource( 1 )]
+[node name="Spatial" type="Spatial" parent="." index="0"]
+
+[node name="RayCast" type="RayCast" parent="." index="1"]
+
+enabled = false
+exclude_parent = true
+cast_to = Vector3( 0, -1, 0 )
+collision_mask = 1
+_sections_unfolded = [ "Transform" ]
 
 
