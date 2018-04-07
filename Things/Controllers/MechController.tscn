@@ -54,14 +54,19 @@ func _ready():
 	if (is_in_group(\"enemy\")):
 		add_to_group(\"enemy_ready\")
 
-func _aim_at_point(point):
-	spatial.look_at_from_position(getAimPos(), point, Vector3(0,1,0))
-	var r = spatial.rotation - mech.rotation;
-	mech.camera_x = r.x
-	mech.camera_y = r.y
+func _aim_at_point(point, other_vel = Vector3(0,0,0)):
+	#for projectile
+	var solns = []
+	var solnn = util.SolveBallisticArc(getAimPos(), 90.0, point, other_vel, 9.8, solns)
+	
+	if (solnn > 0):
+		spatial.look_at_from_position(getAimPos(), getAimPos()+solns[0], Vector3(0,1,0))
+		var r = spatial.rotation - mech.rotation;
+		mech.camera_x = r.x
+		mech.camera_y = r.y
 
 func _aim_at_target(target):
-	_aim_at_point(target.getAimPos())
+	_aim_at_point(target.getAimPos(), target.getVel())
 
 func _ai_process(par):
 	while(true):
@@ -70,31 +75,29 @@ func _ai_process(par):
 			adversaries = get_tree().get_nodes_in_group(\"friendly_ready\")
 		else:
 			adversaries = get_tree().get_nodes_in_group(\"enemy_ready\")
-		#check for visibility later, and do more logic
+		
+		aim = false
 		for a in adversaries:
 			if (checkVisibility(a)):
 				setAimTarget(a)
+				
 				var v = (getPos() - a.getPos()).normalized()
 				var v2 = a.getPos() + Vector3(v.x*cdist, v.y*cdist, v.z*cdist)
-				print(v2)
 				setMovePoint(v2)
+				print(v2)
 		
 		OS.delay_msec(250)
 
 func _physics_process(delta):
-	#if (Input.is_action_pressed(\"to_me_test\")):
-	#	var me = global.currentNav.get_closest_point(get_child(1).global_transform.origin)
-	#	var him = global.currentNav.get_closest_point(global.player.get_child(0).global_transform.origin)
-	#	setAimTarget(global.player)
-	#	setPath(Array(global.currentNav.get_simple_path(me, him)))
-	
 	if (move):
 		mech.dir = move_point - global.currentNav.get_closest_point(mech.translation)
 		if (mech.dir.length() < 2.0):
 			if (path.empty()):
+				mech.dir = Vector3()
 				move = false
 			else:
 				move_point = path.pop_front()
+				mech.dir = move_point - global.currentNav.get_closest_point(mech.translation)
 	else:
 		mech.dir = Vector3()
 	
@@ -123,7 +126,9 @@ func checkVisibility(other, distance = -1):
 func getAimPos():
 	return mech.global_transform.origin + Vector3(0.0,8.0,0.0)
 func getPos():
-	return mech.global_transform.origin"
+	return mech.global_transform.origin
+func getVel():
+	return mech.vel"
 
 [node name="MechController" type="Node" index="0"]
 

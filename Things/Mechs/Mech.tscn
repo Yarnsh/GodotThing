@@ -291,7 +291,6 @@ func _physics_process(delta):
 		for i in range(0, leftWeaponCooldown.size()):
 			leftWeaponCooldown[i] -= delta
 		#leftWeaponCooldownBar.value = (leftWeaponFireRate[leftWeaponSelected] - leftWeaponCooldown[leftWeaponSelected]) * 100 / leftWeaponFireRate[leftWeaponSelected]
-		
 
 func fireRight():
 	if (!in_menu and rightWeaponCooldown[rightWeaponSelected] <= 0.0):
@@ -376,10 +375,11 @@ data = {
 "position": Vector2( 80, 67 ),
 "type": "animation"
 }, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
+"animation": null,
+"filter": [  ],
+"id": "anim 3",
+"position": Vector2( 78, 299 ),
+"type": "animation"
 }, {
 "animation": null,
 "filter": [  ],
@@ -387,11 +387,10 @@ data = {
 "position": Vector2( 78, 185 ),
 "type": "animation"
 }, {
-"animation": null,
-"filter": [  ],
-"id": "anim 3",
-"position": Vector2( 78, 299 ),
-"type": "animation"
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]

@@ -88,7 +88,9 @@ func _process(delta):
 func getAimPos():
 	return Mech.global_transform.origin + Vector3(0.0,8.0,0.0)
 func getPos():
-	return Mech.global_transform.origin"
+	return Mech.global_transform.origin
+func getVel():
+	return Mech.vel"
 
 [node name="Player" type="Node"]
 
