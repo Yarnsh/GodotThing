@@ -13,6 +13,9 @@ signal exited_menu
 onready var Mech = $KinematicBody
 onready var Cam = $KinematicBody/CameraSpatial
 
+onready var leftAmmoHUD = $HUD/HBoxContainer/VBoxContainer/TextureProgress
+onready var rightAmmoHUD = $HUD/HBoxContainer/VBoxContainer2/TextureProgress2
+
 var in_menu = false
 var camrot = Vector3()
 var camspeed = 0.005
@@ -84,9 +87,14 @@ func _process(delta):
 			Mech.camera_x = Cam.rotation.x
 	
 	Mech.dir = dir
+	
+	Mech.aim(\"enemy_ready\")
+	
+	leftAmmoHUD.value = Mech.getLeftWeaponCooling()
+	rightAmmoHUD.value = Mech.getRightWeaponCooling()
 
 func getAimPos():
-	return Mech.global_transform.origin + Vector3(0.0,8.0,0.0)
+	return Mech.global_transform.origin + Vector3(0.0,5.0,0.0)
 func getPos():
 	return Mech.global_transform.origin
 func getVel():

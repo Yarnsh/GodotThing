@@ -16,6 +16,9 @@ func _ready():
 	# Initialization here
 	pass
 
+func aim(group, is_flipped = false):
+	pass
+
 func fire(id, is_flipped = false):
 	var node = global.bulletScene.instance()
 	node.parent_vel = Vector3(0,0,0)

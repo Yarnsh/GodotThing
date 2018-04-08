@@ -217,3 +217,36 @@ func SolveBallisticArc(proj_pos, proj_speed, target_pos, target_velocity, gravit
 	if (numSolutions > 1): outArr.append(solutions[1])
 	
 	return numSolutions
+
+func _sort_tuples(a, b):
+	return a[1] < b[1]
+func FindInAngle(group, start, direction, angle, distance = -1):
+	var targets = get_tree().get_nodes_in_group(group)
+	var found = []
+	var d = distance * distance
+	
+	for t in targets:
+		var plong = t.getAimPos() - start
+		var pd = plong.length_squared()
+		var p = plong.normalized()
+		var q = direction.normalized()
+		
+		if (distance < 0 or pd < d):
+			var a = q.angle_to(p)
+			if (a <= angle):
+				var inserted = false
+				var i = 0
+				for fa in found:
+					if (a < fa[0]):
+						inserted = true
+						found.insert(i, [t, a])
+						break
+				if (!inserted):
+					found.append([t, a])
+	
+	found.sort_custom(self, "_sort_tuples")
+	var ret = []
+	for f in found:
+		ret.append(f[0])
+	
+	return ret

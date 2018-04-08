@@ -7,10 +7,10 @@ path="res://.import/STANDARD_gattlinggun.dae-6fdb474c3925fe3cee05c4b32fb40e7f.sc
 [deps]
 
 source_file="res://Things/Weapons/STANDARD_gattlinggun.dae"
-source_md5="f4779fa10eacf46a5aad4ebe3f6aa24e"
+source_md5="72d87c9337a4311f532bfc62f43b4e1f"
 
 dest_files=[ "res://.import/STANDARD_gattlinggun.dae-6fdb474c3925fe3cee05c4b32fb40e7f.scn" ]
-dest_md5="da5d642d02fb2816a51dbda309c40aca"
+dest_md5="cc966d835e64ea33fdd8d4c5f82bcc76"
 
 [params]
 

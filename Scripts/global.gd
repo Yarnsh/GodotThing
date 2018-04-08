@@ -5,6 +5,7 @@ var next_id = 0
 
 var particles
 var bulletScene
+var shotTraceScene
 var currentNav
 var player
 
@@ -44,6 +45,7 @@ func getId():
 func _ready():
 	particles = preload("res://Particles.tscn")
 	bulletScene = preload("res://Bullet.tscn")
+	shotTraceScene = preload("res://Things/Weapons/ShotTrace.tscn")
 
 func closerDirVector(start, end, amount): #takes unit vectors only
 	var axis = start.cross(end)

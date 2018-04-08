@@ -4,7 +4,7 @@
 [ext_resource path="res://UI/over.png" type="Texture" id=2]
 [ext_resource path="res://UI/mid.png" type="Texture" id=3]
 
-[node name="MarginContainer" type="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -91,7 +91,7 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 min_value = 0.0
-max_value = 100.0
+max_value = 1.0
 step = 0.0
 page = 0.0
 value = 0.0
@@ -156,7 +156,7 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 min_value = 0.0
-max_value = 100.0
+max_value = 1.0
 step = 0.0
 page = 0.0
 value = 0.0

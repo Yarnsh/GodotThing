@@ -52,13 +52,11 @@ var leftWeaponSelected = 0
 var leftWeaponNode = []
 var leftWeaponFireRate = []
 var leftWeaponCooldown = []
-var leftWeaponCooldownBar
 
 var rightWeaponSelected = 0
 var rightWeaponNode = []
 var rightWeaponFireRate = []
 var rightWeaponCooldown = []
-var rightWeaponCooldownBar
 
 onready var animPlayer = $Model/AnimationTreePlayer
 var floorStickRay
@@ -220,11 +218,15 @@ func nextLeftWeapon():
 	leftWeaponSelected = (leftWeaponSelected + 1) % leftWeaponNode.size()
 func getLeftWeapon():
 	return leftWeaponSelected
+func getLeftWeaponCooling():
+	return 1 - (leftWeaponCooldown[leftWeaponSelected] / leftWeaponFireRate[leftWeaponSelected])
 
 func nextRightWeapon():
 	rightWeaponSelected = (rightWeaponSelected + 1) % rightWeaponNode.size()
 func getRightWeapon():
 	return rightWeaponSelected
+func getRightWeaponCooling():
+	return 1 - (rightWeaponCooldown[rightWeaponSelected] / rightWeaponFireRate[rightWeaponSelected])
 
 func _physics_process(delta):
 	if (is_ready):
@@ -286,11 +288,9 @@ func _physics_process(delta):
 		
 		for i in range(0, rightWeaponCooldown.size()):
 			rightWeaponCooldown[i] -= delta
-		#rightWeaponCooldownBar.value = (rightWeaponFireRate[rightWeaponSelected] - rightWeaponCooldown[rightWeaponSelected]) * 100 / rightWeaponFireRate[rightWeaponSelected]
 		
 		for i in range(0, leftWeaponCooldown.size()):
 			leftWeaponCooldown[i] -= delta
-		#leftWeaponCooldownBar.value = (leftWeaponFireRate[leftWeaponSelected] - leftWeaponCooldown[leftWeaponSelected]) * 100 / leftWeaponFireRate[leftWeaponSelected]
 
 func fireRight():
 	if (!in_menu and rightWeaponCooldown[rightWeaponSelected] <= 0.0):
@@ -300,7 +300,11 @@ func fireRight():
 func fireLeft():
 	if (!in_menu and leftWeaponCooldown[leftWeaponSelected] <= 0.0):
 		leftWeaponCooldown[leftWeaponSelected] = leftWeaponFireRate[leftWeaponSelected]
-		leftWeaponNode[leftWeaponSelected].get_child(0).fire(id)"
+		leftWeaponNode[leftWeaponSelected].get_child(0).fire(id)
+
+func aim(group):
+	if (rightWeaponNode[rightWeaponSelected].get_child_count() > 0): rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true)
+	if (leftWeaponNode[leftWeaponSelected].get_child_count() > 0): leftWeaponNode[leftWeaponSelected].get_child(0).aim(group)"
 
 [sub_resource type="CapsuleShape" id=2]
 
@@ -381,16 +385,16 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]

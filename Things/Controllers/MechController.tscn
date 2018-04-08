@@ -84,7 +84,6 @@ func _ai_process(par):
 				var v = (getPos() - a.getPos()).normalized()
 				var v2 = a.getPos() + Vector3(v.x*cdist, v.y*cdist, v.z*cdist)
 				setMovePoint(v2)
-				print(v2)
 		
 		OS.delay_msec(250)
 
@@ -111,6 +110,11 @@ func _physics_process(delta):
 		mech.camera_y = 0
 	
 	#if aiming at enemy and in good range and stuff
+	if (is_enemy):
+		mech.aim(\"friendly_ready\")
+	else:
+		mech.aim(\"enemy_ready\")
+	
 	mech.fireRight()
 	mech.fireLeft()
 
@@ -124,13 +128,13 @@ func checkVisibility(other, distance = -1):
 	return x
 
 func getAimPos():
-	return mech.global_transform.origin + Vector3(0.0,8.0,0.0)
+	return mech.global_transform.origin + Vector3(0.0,5.0,0.0)
 func getPos():
 	return mech.global_transform.origin
 func getVel():
 	return mech.vel"
 
-[node name="MechController" type="Node" index="0"]
+[node name="MechController" type="Node"]
 
 script = SubResource( 1 )
 
