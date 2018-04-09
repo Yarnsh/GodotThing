@@ -4,6 +4,7 @@
 
 script/source = "extends KinematicBody
 
+export(bool) var onPlayer = false
 var id = -1
 var is_ready = false
 
@@ -131,7 +132,9 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 		leftWeaponFireRate[index] = lWepParts[index].fireRate
 		leftWeaponCooldown[index] = leftWeaponFireRate[index]
 		if (l_wep_part != null):
-			lspatial.add_child(l_wep_part.instance())
+			var lwp = l_wep_part.instance()
+			lwp.onPlayer = onPlayer
+			lspatial.add_child(lwp)
 	
 	for rname in rightWeps:
 		var rw_attach = BoneAttachment.new()
@@ -146,7 +149,9 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 		rightWeaponFireRate[index] = rWepParts[index].fireRate
 		rightWeaponCooldown[index] = rightWeaponFireRate[index]
 		if (r_wep_part != null):
-			rspatial.add_child(r_wep_part.instance())
+			var rwp = r_wep_part.instance()
+			rwp.onPlayer = onPlayer
+			rspatial.add_child(rwp)
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
 	
 	_ready_nodes()
@@ -327,6 +332,7 @@ axis_lock_angular_z = false
 collision/safe_margin = 0.001
 script = SubResource( 1 )
 _sections_unfolded = [ "Axis Lock", "Collision", "Transform", "collision" ]
+onPlayer = false
 initLegs = 0
 initTorso = 0
 initLWep1 = 0

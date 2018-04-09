@@ -7,6 +7,8 @@
 
 script/source = "extends Spatial
 
+var onPlayer = false
+
 onready var animNode = $AnimationPlayer
 onready var fireNode = $howitzer/Skeleton/BoneAttachment
 onready var soundNode = $AudioStreamPlayer3D
@@ -29,9 +31,13 @@ func fire(id, is_flipped = false):
 	animNode.play(\"Fire\")
 	soundNode.play()"
 
-[node name="Scene Root" instance=ExtResource( 1 )]
+[node name="Scene Root" index="0" instance=ExtResource( 1 )]
 
 script = SubResource( 1 )
+
+[node name="Skeleton" parent="howitzer" index="0"]
+
+bones/2/bound_children = [ NodePath("BoneAttachment") ]
 
 [node name="BoneAttachment" type="BoneAttachment" parent="howitzer/Skeleton" index="1"]
 

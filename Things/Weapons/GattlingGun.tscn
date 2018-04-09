@@ -1,17 +1,21 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Things/Weapons/STANDARD_gattlinggun.dae" type="PackedScene" id=1]
 [ext_resource path="res://Things/Audio/effect00.wav" type="AudioStream" id=2]
+[ext_resource path="res://Things/Weapons/images/aimer.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 
 script/source = "extends Spatial
+
+var onPlayer = false
 
 onready var animNode = $\"Scene Root/AnimationPlayer\"
 onready var fireNode = $\"Scene Root/gattlinggun/Skeleton/BoneAttachment\"
 onready var aimNode = $\"Scene Root\"
 onready var bulletRay = $\"Scene Root/gattlinggun/Skeleton/BoneAttachment/RayCast\"
 onready var soundNode = $\"Scene Root/AudioStreamPlayer3D\"
+onready var aimSprite = $Sprite
 
 func _ready():
 	pass
@@ -19,10 +23,15 @@ func _ready():
 func aim(group, is_flipped = false):
 	var found = util.FindInAngle(group, global_transform.origin, -global_transform.basis.z, 0.35, 100)
 	if (found.size() > 0):
+		if (onPlayer):
+			aimSprite.show()
+			aimSprite.set_offset(global.player.CCam.unproject_position(found[0].getAimPos()))
+		
 		aimNode.look_at(found[0].getAimPos(), global_transform.basis.y)
 		if (is_flipped): 
 			aimNode.set_scale(Vector3(1,-1,-1))
 	else:
+		aimSprite.hide()
 		if (is_flipped): 
 			aimNode.set_scale(Vector3(1,1,1))
 		aimNode.set_rotation(Vector3(0,0,0))
@@ -84,6 +93,11 @@ emission_angle_filter_attenuation_db = -12.0
 attenuation_filter_cutoff_hz = 5000.0
 attenuation_filter_db = -24.0
 doppler_tracking = 0
+
+[node name="Sprite" type="Sprite" parent="." index="1"]
+
+visible = false
+texture = ExtResource( 3 )
 
 
 [editable path="Scene Root"]
