@@ -35,7 +35,6 @@ script = SubResource( 1 )
 [node name="KinematicBody" parent="MechController" index="1" instance=ExtResource( 2 )]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 10 )
-onPlayer = false
 initLegs = 1
 initTorso = 1
 initLWep1 = 2

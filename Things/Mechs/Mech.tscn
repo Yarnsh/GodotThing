@@ -375,15 +375,15 @@ data = {
 "connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
 "animation": null,
 "filter": [  ],
 "id": "anim",
 "position": Vector2( 80, 67 ),
 "type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 }, {
 "animation": null,
 "filter": [  ],
@@ -391,16 +391,16 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
-}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
+}, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
