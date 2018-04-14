@@ -199,7 +199,7 @@ _sections_unfolded = [ "Emission Shape", "Flags", "Gravity", "Spread", "Trail" ]
 
 size = Vector2( 1, 1 )
 
-[node name="Spatial" type="Spatial" index="0"]
+[node name="Spatial" type="Spatial"]
 
 script = SubResource( 1 )
 

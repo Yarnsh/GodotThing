@@ -7,7 +7,7 @@ path="res://.import/missilelauncher.dae-0448a879b0b1556efbed44010e448bd4.scn"
 [deps]
 
 source_file="res://Things/Weapons/missilelauncher.dae"
-source_md5="45f5aad69e81f4853af6eee2976b722e"
+source_md5="78e38dcea105fc10b8c04b4674425656"
 
 dest_files=[ "res://.import/missilelauncher.dae-0448a879b0b1556efbed44010e448bd4.scn" ]
 dest_md5="47f5c5fcf9af2308d17dc14ed602d9db"

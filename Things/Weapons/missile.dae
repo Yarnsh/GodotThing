@@ -5,8 +5,8 @@
 		<author>Anonymous</author>
 		<authoring_tool>Collada Exporter for Blender 2.6+, by Juan Linietsky (juan@codenix.com)</authoring_tool>
 	</contributor>
-	<created>2018-04-14T13:11:38Z</created>
-	<modified>2018-04-14T13:11:38Z</modified>
+	<created>2018-04-14T14:49:16Z</created>
+	<modified>2018-04-14T14:49:16Z</modified>
 	<unit meter="1.0" name="meter"/>
 	<up_axis>Z_UP</up_axis>
 </asset>
@@ -58,9 +58,6 @@
 					</technique>
 					<technique profile="GOOGLEEARTH">
 						<double_sided>0</double_sided>
-					</technique>
-					<technique profile="GODOT">
-						<unshaded>1</unshaded>
 					</technique>
 				</extra>
 			</technique>

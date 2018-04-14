@@ -52,7 +52,7 @@ func _input(event):
 			in_menu = true
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else: if (event.is_action_pressed(\"left_weapon_switch\")):
-			Mech.nextRightWeapon()
+			Mech.nextLeftWeapon()
 			get_node(\"HUD/HBoxContainer/VBoxContainer/Label\").text = String(Mech.getLeftWeapon())
 		else: if (event.is_action_pressed(\"right_weapon_switch\")):
 			Mech.nextRightWeapon()
@@ -101,7 +101,7 @@ func getPos():
 func getVel():
 	return Mech.vel"
 
-[node name="Player" type="Node"]
+[node name="Player" type="Node" index="0"]
 
 script = SubResource( 1 )
 
@@ -117,7 +117,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="ViewRay" type="RayCast" parent="KinematicBody/CameraSpatial" index="0"]
 
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.47916, 1.24634, 10.2551 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.47916, 1.7512, 10.2551 )
 enabled = true
 exclude_parent = true
 cast_to = Vector3( 0, 0, -8 )
