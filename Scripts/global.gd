@@ -5,14 +5,18 @@ var next_id = 0
 
 var particles
 var bulletScene
+var missileScene
 var shotTraceScene
+
 var currentNav
+var currentPOI = null
 var player
 
 var WEAPONS = [
 	load("res://Scripts/weapon.gd").new("NONE", "NONE", 99999.0),
 	load("res://Scripts/weapon.gd").new("Gattling Gun", "res://Things/Weapons/GattlingGun.tscn", 0.083),
-	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/Howitzer.tscn", 1.2)
+	load("res://Scripts/weapon.gd").new("Howitzer", "res://Things/Weapons/Howitzer.tscn", 1.2),
+	load("res://Scripts/weapon.gd").new("Missile Launcher", "res://Things/Weapons/MissileLauncher.tscn", 2.0)
 ]
 
 var LEGS = [
@@ -43,8 +47,10 @@ func getId():
 	return ret_id
 
 func _ready():
+	randomize()
 	particles = preload("res://Particles.tscn")
 	bulletScene = preload("res://Bullet.tscn")
+	missileScene = preload("res://Things/Weapons/Missile.tscn")
 	shotTraceScene = preload("res://Things/Weapons/ShotTrace.tscn")
 
 func closerDirVector(start, end, amount): #takes unit vectors only

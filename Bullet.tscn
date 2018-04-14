@@ -31,7 +31,7 @@ func _process(delta):
 			var splash = global.particles.instance()
 			get_tree().get_root().add_child(splash)
 			splash.look_at(-rayNode.get_collision_normal(), Vector3(0,1,0))
-			splash.translate(rayNode.get_collision_point())
+			splash.global_translate(rayNode.get_collision_point())
 			splash.set_emitting(true)
 			
 			if (node.has_method(\"takeHit\")):
@@ -103,7 +103,7 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Emission", "Flags", "Parameters", "Vertex Color" ]
 
-[node name="Spatial" type="Spatial"]
+[node name="Spatial" type="Spatial" index="0"]
 
 script = SubResource( 1 )
 

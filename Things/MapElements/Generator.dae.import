@@ -2,15 +2,15 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Bigmap.dae-3d1f0884630e748ccd0d812299d03b52.scn"
+path="res://.import/Generator.dae-a9942f60d8f074868389b84b5a136a53.scn"
 
 [deps]
 
-source_file="res://TestMap2/Bigmap.dae"
-source_md5="2cc2f347b1929bfa2175c4b412e78468"
+source_file="res://Things/MapElements/Generator.dae"
+source_md5="7fe372175a62a26760be4d42d0928603"
 
-dest_files=[ "res://.import/Bigmap.dae-3d1f0884630e748ccd0d812299d03b52.scn" ]
-dest_md5="6c547b590ea8ba55a2923279cca305be"
+dest_files=[ "res://.import/Generator.dae-a9942f60d8f074868389b84b5a136a53.scn" ]
+dest_md5="bb557cad0d760c57be3489d12aef57f2"
 
 [params]
 
@@ -18,10 +18,10 @@ nodes/root_type="Spatial"
 nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
-nodes/storage=1
+nodes/storage=0
 materials/location=1
 materials/storage=1
-materials/keep_on_reimport=true
+materials/keep_on_reimport=false
 meshes/compress=true
 meshes/ensure_tangents=true
 meshes/storage=0

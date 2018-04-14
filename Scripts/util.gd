@@ -237,7 +237,7 @@ func FindInAngle(group, start, direction, angle, distance = -1):
 				var inserted = false
 				var i = 0
 				for fa in found:
-					if (a < fa[0]):
+					if (a < fa[1]):
 						inserted = true
 						found.insert(i, [t, a])
 						break

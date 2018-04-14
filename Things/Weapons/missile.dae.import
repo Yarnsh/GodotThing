@@ -2,15 +2,15 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Map-nav.dae-da30043947736b45a33a2dea927b08b7.scn"
+path="res://.import/missile.dae-ce7a954e033d6b310b1189420183bf5b.scn"
 
 [deps]
 
-source_file="res://TestMap2/Map-nav.dae"
-source_md5="0251873b8037dd3f481e0c53f849a42a"
+source_file="res://Things/Weapons/missile.dae"
+source_md5="ea6e55a4461a6577b94e4cb6d3ab1695"
 
-dest_files=[ "res://.import/Map-nav.dae-da30043947736b45a33a2dea927b08b7.scn" ]
-dest_md5="3298e80e6c8383518560b7a39d1e5f15"
+dest_files=[ "res://.import/missile.dae-ce7a954e033d6b310b1189420183bf5b.scn" ]
+dest_md5="a7dcfafcbe31990a63abd151fa730e4c"
 
 [params]
 

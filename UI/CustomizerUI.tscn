@@ -11,7 +11,8 @@ signal exited_menu
 const WEAPONS = [
 \"NONE\",
 \"Gattling Gun\",
-\"Howitzer\"
+\"Howitzer\",
+\"Missile Launcher\"
 ]
 
 const PATTERNS = [

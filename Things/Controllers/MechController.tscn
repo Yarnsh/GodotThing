@@ -8,6 +8,8 @@ var ai_thread
 
 var is_enemy
 
+var target
+
 var move = false
 var move_point = Vector3(0,6,200)
 var aim = false
@@ -15,7 +17,9 @@ var aim_target = null
 var aim_point = Vector3(0,0,0)
 var path = [Vector3(-100,10,200)]
 
-var cdist = 30.0
+var cdist = 100.0
+var ddist = 400.0
+var min_ddist = 100.0
 
 onready var mech = $KinematicBody
 onready var spatial = $Spatial
@@ -23,14 +27,16 @@ onready var ray = $RayCast
 
 func setPath(p):
 	path = p
-	p.pop_front()
-	move_point = p.pop_front()
-	move = true
+	if (path.empty()):
+		move = false
+	else:
+		move_point = p.pop_front()
+		move = true
 
 func setMovePoint(p):
-	var me = global.currentNav.get_closest_point(get_child(1).global_transform.origin)
+	p = global.currentNav.get_closest_point(p)
+	var me = global.currentNav.get_closest_point(mech.global_transform.origin)
 	setPath(Array(global.currentNav.get_simple_path(me, p)))
-	move = true
 
 func setAimPoint(p):
 	aim_target = null
@@ -39,11 +45,11 @@ func setAimPoint(p):
 
 func setAimTarget(t):
 	aim_target = t
-	aim = true
+	aim = (aim_target != null)
 
 func _ready():
 	is_enemy = is_in_group(\"enemy\")
-	mech.dir = Vector3(1,0,0);
+	mech.dir = Vector3(0,0,0);
 	
 	ai_thread = Thread.new()
 	ai_thread.start(self, \"_ai_process\")
@@ -65,10 +71,10 @@ func _aim_at_point(point, other_vel = Vector3(0,0,0)):
 		mech.camera_x = r.x
 		mech.camera_y = r.y
 
-func _aim_at_target(target):
-	_aim_at_point(target.getAimPos(), target.getVel())
+func _aim_at_target(atarget):
+	_aim_at_point(atarget.getAimPos(), atarget.getVel())
 
-func _ai_process(par):
+func _ai_process(par): #gonna make this specifically for target defence to start
 	while(true):
 		var adversaries
 		if (is_enemy):
@@ -77,13 +83,36 @@ func _ai_process(par):
 			adversaries = get_tree().get_nodes_in_group(\"enemy_ready\")
 		
 		aim = false
+		target = null
 		for a in adversaries:
-			if (checkVisibility(a)):
-				setAimTarget(a)
-				
-				var v = (getPos() - a.getPos()).normalized()
-				var v2 = a.getPos() + Vector3(v.x*cdist, v.y*cdist, v.z*cdist)
+			if (checkVisibility(a, 175)):
+				#figure out who to target here
+				#prioritize targets who are in critical range of thing you are defending
+				target = a
+		
+		#do stuff to attack target or default actions here
+		#if target is too far from defence point dont chase
+		if (target != null):
+			if ((getPos() - target.getPos()).length() <= 300):
+				setAimTarget(target)
+			else:
+				setAimTarget(null)
+			
+			if (global.currentPOI == null || (global.currentPOI - target.getPos()).length() <= ddist):
+				var v = (getPos() - target.getPos()).normalized()
+				var v2 = target.getPos() + Vector3(v.x*cdist, v.y*cdist, v.z*cdist)
 				setMovePoint(v2)
+			else:
+				var v = (target.getPos() - global.currentPOI).normalized()
+				var v2 = global.currentPOI + Vector3(v.x*ddist, v.y*ddist, v.z*ddist)
+				setMovePoint(v2)
+		else:
+			setAimTarget(null)
+			if (global.currentPOI != null && move == false):
+				var t = 2*PI*(rand_range(0.0,1.0))
+				var r = (rand_range(min_ddist, ddist))
+				var v = Vector3(r*cos(t), 0, r*sin(t)) + global.currentPOI
+				setMovePoint(v)
 		
 		OS.delay_msec(250)
 
@@ -115,8 +144,9 @@ func _physics_process(delta):
 	else:
 		mech.aim(\"enemy_ready\")
 	
-	mech.fireRight()
-	mech.fireLeft()
+	if (aim):
+		mech.fireRight()
+		mech.fireLeft()
 
 func checkVisibility(other, distance = -1):
 	var x = false
