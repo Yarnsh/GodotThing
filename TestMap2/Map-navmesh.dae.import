@@ -7,7 +7,7 @@ path="res://.import/Map-navmesh.dae-dcec307b5992299f2d34a4b99e21086c.scn"
 [deps]
 
 source_file="res://TestMap2/Map-navmesh.dae"
-source_md5="85dca185ed6b9e02253ac69a444a67cc"
+source_md5="48d87697ef2b6f1019abf522b39f66f8"
 
 dest_files=[ "res://.import/Map-navmesh.dae-dcec307b5992299f2d34a4b99e21086c.scn" ]
 dest_md5="3a1aee22bff172ba97002985c8667f42"
