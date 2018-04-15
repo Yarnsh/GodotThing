@@ -10,6 +10,7 @@
 script/source = "extends Spatial
 
 var onPlayer = false
+var selected = false
 
 onready var animNode = $\"Scene Root/AnimationPlayer\"
 onready var fireNode = $\"Scene Root/missilelauncher/Skeleton/BoneAttachment\"
@@ -18,18 +19,18 @@ onready var bulletRay = $\"Scene Root/missilelauncher/Skeleton/BoneAttachment/Ra
 onready var soundNode = $\"AudioStreamPlayer3D\"
 onready var aimSprite = $Sprite
 onready var aimSprite2 = $Sprite3D
+onready var aimray = $\"Scene Root/missilelauncher/Skeleton/BoneAttachment/RayCast\"
 
 var target = null
 
 func _ready():
-	if (onPlayer):
-		aimSprite2.show()
+	pass
 
 func aim(group, is_flipped = false):
 	target = null
-	var found = util.FindInAngle(group, global_transform.origin, -global_transform.basis.z, 0.35, 400)
+	var found = util.FindInAngle(group, global_transform.origin, -global_transform.basis.z, 0.35, 400, aimray)
 	if (found.size() > 0):
-		if (onPlayer):
+		if (onPlayer and selected):
 			aimSprite.show()
 			aimSprite.set_offset(global.player.CCam.unproject_position(found[0].getAimPos()))
 		
@@ -46,7 +47,14 @@ func fire(id, is_flipped = false):
 	if (is_flipped): node.set_scale(Vector3(-1,1,-1))
 	get_tree().get_root().add_child(node)
 	
-	soundNode.play()"
+	soundNode.play()
+
+func setSelected(sel):
+	selected = sel
+	if (sel and onPlayer):
+		aimSprite2.show()
+	else:
+		aimSprite2.hide()"
 
 [sub_resource type="SpatialMaterial" id=2]
 
@@ -110,6 +118,14 @@ script = SubResource( 1 )
 
 transform = Transform( 1, -1.05449e-08, -1.48427e-09, -4.60471e-09, 1, -4.60471e-09, 1.48427e-09, -9.06064e-09, 1, -0.78845, 0.447861, -0.860079 )
 bone_name = "Fire0"
+_sections_unfolded = [ "Transform" ]
+
+[node name="RayCast" type="RayCast" parent="Scene Root/missilelauncher/Skeleton/BoneAttachment" index="0"]
+
+enabled = false
+exclude_parent = true
+cast_to = Vector3( 0, 0, -400 )
+collision_mask = 1
 _sections_unfolded = [ "Transform" ]
 
 [node name="Sprite" type="Sprite" parent="." index="1"]

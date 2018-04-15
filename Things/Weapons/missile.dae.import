@@ -7,7 +7,7 @@ path="res://.import/missile.dae-ce7a954e033d6b310b1189420183bf5b.scn"
 [deps]
 
 source_file="res://Things/Weapons/missile.dae"
-source_md5="53a0cac9d8c19a3cdffa852ce2377e52"
+source_md5="d251976ea53b0ebcaa6b0bb7723f80bf"
 
 dest_files=[ "res://.import/missile.dae-ce7a954e033d6b310b1189420183bf5b.scn" ]
 dest_md5="a7dcfafcbe31990a63abd151fa730e4c"

@@ -10,6 +10,7 @@
 script/source = "extends Spatial
 
 var onPlayer = false
+var selected = false
 
 onready var animNode = $\"Scene Root/AnimationPlayer\"
 onready var fireNode = $\"Scene Root/gattlinggun/Skeleton/BoneAttachment\"
@@ -18,15 +19,16 @@ onready var bulletRay = $\"Scene Root/gattlinggun/Skeleton/BoneAttachment/RayCas
 onready var soundNode = $\"Scene Root/AudioStreamPlayer3D\"
 onready var aimSprite = $Sprite
 onready var aimSprite2 = $Sprite3D
+onready var aimRay = $\"Scene Root/gattlinggun/Skeleton/BoneAttachment/RayCast2\"
 
 func _ready():
 	if (onPlayer):
 		aimSprite2.show()
 
 func aim(group, is_flipped = false):
-	var found = util.FindInAngle(group, global_transform.origin, -global_transform.basis.z, 0.35, 100)
+	var found = util.FindInAngle(group, global_transform.origin, -global_transform.basis.z, 0.35, 100, aimRay)
 	if (found.size() > 0):
-		if (onPlayer):
+		if (onPlayer and selected):
 			aimSprite.show()
 			aimSprite.set_offset(global.player.CCam.unproject_position(found[0].getAimPos()))
 		
@@ -57,7 +59,14 @@ func fire(id, is_flipped = false):
 	bulletTrace.set_transform(fireNode.global_transform)
 	bulletTrace.translate(Vector3(0,0,-(dist_to_hit/2.0)))
 	bulletTrace.set_scale(Vector3(1,1,dist_to_hit))
-	get_tree().get_root().add_child(bulletTrace)"
+	get_tree().get_root().add_child(bulletTrace)
+
+func setSelected(sel):
+	selected = sel
+	if (sel and onPlayer):
+		aimSprite2.show()
+	else:
+		aimSprite2.hide()"
 
 [sub_resource type="SpatialMaterial" id=2]
 
@@ -111,11 +120,15 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Flags", "Parameters", "Vertex Color" ]
 
-[node name="Scene Root" type="Spatial"]
+[node name="Scene Root" type="Spatial" index="0"]
 
 script = SubResource( 1 )
 
 [node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]
+
+[node name="Skeleton" parent="Scene Root/gattlinggun" index="0"]
+
+bones/2/bound_children = [ NodePath("BoneAttachment") ]
 
 [node name="BoneAttachment" type="BoneAttachment" parent="Scene Root/gattlinggun/Skeleton" index="1"]
 
@@ -128,6 +141,14 @@ enabled = false
 exclude_parent = true
 cast_to = Vector3( 0, 0, -100 )
 collision_mask = 3
+_sections_unfolded = [ "Transform" ]
+
+[node name="RayCast2" type="RayCast" parent="Scene Root/gattlinggun/Skeleton/BoneAttachment" index="1"]
+
+enabled = false
+exclude_parent = true
+cast_to = Vector3( 0, 0, -100 )
+collision_mask = 1
 _sections_unfolded = [ "Transform" ]
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Scene Root" index="2"]

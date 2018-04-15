@@ -8,6 +8,7 @@
 script/source = "extends Spatial
 
 var onPlayer = false
+var selected = false
 
 onready var animNode = $AnimationPlayer
 onready var fireNode = $howitzer/Skeleton/BoneAttachment
@@ -29,7 +30,10 @@ func fire(id, is_flipped = false):
 	if (is_flipped): node.set_scale(Vector3(-1,1,-1))
 	get_tree().get_root().add_child(node)
 	animNode.play(\"Fire\")
-	soundNode.play()"
+	soundNode.play()
+
+func setSelected(sel):
+	selected = sel"
 
 [node name="Scene Root" instance=ExtResource( 1 )]
 

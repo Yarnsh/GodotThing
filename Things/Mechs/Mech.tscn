@@ -135,6 +135,8 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 			var lwp = l_wep_part.instance()
 			lwp.onPlayer = onPlayer
 			lspatial.add_child(lwp)
+			if (index == 0):
+				lwp.setSelected(true)
 	
 	for rname in rightWeps:
 		var rw_attach = BoneAttachment.new()
@@ -152,6 +154,8 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 			var rwp = r_wep_part.instance()
 			rwp.onPlayer = onPlayer
 			rspatial.add_child(rwp)
+			if (index == 0):
+				rwp.setSelected(true)
 			rspatial.get_node(\"Scene Root\").scale = Vector3(-1,1,1)
 	
 	_ready_nodes()
@@ -220,14 +224,18 @@ func _ready():
 	
 
 func nextLeftWeapon():
+	leftWeaponNode[leftWeaponSelected].get_child(0).setSelected(false)
 	leftWeaponSelected = (leftWeaponSelected + 1) % leftWeaponNode.size()
+	leftWeaponNode[leftWeaponSelected].get_child(0).setSelected(true)
 func getLeftWeapon():
 	return leftWeaponSelected
 func getLeftWeaponCooling():
 	return 1 - (leftWeaponCooldown[leftWeaponSelected] / leftWeaponFireRate[leftWeaponSelected])
 
 func nextRightWeapon():
+	rightWeaponNode[rightWeaponSelected].get_child(0).setSelected(false)
 	rightWeaponSelected = (rightWeaponSelected + 1) % rightWeaponNode.size()
+	rightWeaponNode[rightWeaponSelected].get_child(0).setSelected(true)
 func getRightWeapon():
 	return rightWeaponSelected
 func getRightWeaponCooling():
@@ -391,16 +399,16 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]

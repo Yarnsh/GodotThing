@@ -7,7 +7,7 @@ path="res://.import/Generator.dae-a9942f60d8f074868389b84b5a136a53.scn"
 [deps]
 
 source_file="res://Things/MapElements/Generator.dae"
-source_md5="5460b37ab8a0fc91e4cff8578110435e"
+source_md5="7fe372175a62a26760be4d42d0928603"
 
 dest_files=[ "res://.import/Generator.dae-a9942f60d8f074868389b84b5a136a53.scn" ]
 dest_md5="bb557cad0d760c57be3489d12aef57f2"

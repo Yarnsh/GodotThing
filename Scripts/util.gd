@@ -220,20 +220,27 @@ func SolveBallisticArc(proj_pos, proj_speed, target_pos, target_velocity, gravit
 
 func _sort_tuples(a, b):
 	return a[1] < b[1]
-func FindInAngle(group, start, direction, angle, distance = -1):
+#pass a ray if you dont want to check behind some stuff, make it ignore things in your group, and it will be modified
+func FindInAngle(group, start, direction, angle, distance = -1, ray = null):
 	var targets = get_tree().get_nodes_in_group(group)
 	var found = []
-	var d = distance * distance
+	var d = distance
 	
 	for t in targets:
 		var plong = t.getAimPos() - start
-		var pd = plong.length_squared()
+		var pd = plong.length()
 		var p = plong.normalized()
 		var q = direction.normalized()
 		
 		if (distance < 0 or pd < d):
 			var a = q.angle_to(p)
 			if (a <= angle):
+				if (ray != null):
+					ray.look_at(t.getAimPos(), Vector3(0,1,0))
+					ray.cast_to = Vector3(0,0,-pd)
+					ray.force_raycast_update()
+					if (ray.is_colliding()):
+						continue
 				var inserted = false
 				var i = 0
 				for fa in found:
