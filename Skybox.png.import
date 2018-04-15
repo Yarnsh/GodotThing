@@ -7,10 +7,10 @@ path="res://.import/Skybox.png-9544fe1d0d429c010c0f9515abfc9afa.stex"
 [deps]
 
 source_file="res://Skybox.png"
-source_md5="28ae621e8bbc906f9a3e32ce5316183b"
+source_md5="d9ba6843b950c1af07db75ede24964ca"
 
 dest_files=[ "res://.import/Skybox.png-9544fe1d0d429c010c0f9515abfc9afa.stex" ]
-dest_md5="92bef53898360182b86eb00f97f52a00"
+dest_md5="3c1b71876cba64c4198d62ad9aa47a71"
 
 [params]
 
