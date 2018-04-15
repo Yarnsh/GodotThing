@@ -13,6 +13,7 @@ var target
 var move = false
 var move_point = Vector3(0,6,200)
 var aim = false
+var aim_close = false
 var aim_target = null
 var aim_point = Vector3(0,0,0)
 var path = [Vector3(-100,10,200)]
@@ -68,11 +69,11 @@ func _aim_at_point(point, other_vel = Vector3(0,0,0)):
 	if (solnn > 0):
 		spatial.look_at_from_position(getAimPos(), getAimPos()+solns[0], Vector3(0,1,0))
 		var r = spatial.rotation - mech.rotation;
-		mech.camera_x = r.x
-		mech.camera_y = r.y
+		return mech.look(r.x, r.y)
+	return false
 
 func _aim_at_target(atarget):
-	_aim_at_point(atarget.getAimPos(), atarget.getVel())
+	return _aim_at_point(atarget.getAimPos(), atarget.getVel())
 
 func _ai_process(par): #gonna make this specifically for target defence to start
 	while(true):
@@ -129,22 +130,24 @@ func _physics_process(delta):
 	else:
 		mech.dir = Vector3()
 	
+	aim_close = false
+	
 	if (aim):
 		if (aim_target != null):
-			_aim_at_target(aim_target)
+			aim_close = _aim_at_target(aim_target)
 		else:
-			_aim_at_point(aim_point)
+			aim_close = _aim_at_point(aim_point)
 	else:
-		mech.camera_x = 0
-		mech.camera_y = 0
+		mech.look(0, 0)
 	
 	#if aiming at enemy and in good range and stuff
 	if (is_enemy):
-		mech.aim(\"friendly_ready\")
+		aim_close = mech.aim(\"friendly_ready\") or aim_close
 	else:
-		mech.aim(\"enemy_ready\")
+		aim_close = mech.aim(\"enemy_ready\") or aim_close
 	
-	if (aim):
+	
+	if (aim and aim_close):
 		mech.fireRight()
 		mech.fireLeft()
 

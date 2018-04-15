@@ -47,7 +47,7 @@ var torso_pitch_bone_id = 0
 var torso_pitch_bone_transform = Transform()
 var torso_pitchspeed = 0.05
 var pitch_torso_facing = Vector3(0,0,1)
-var pitch_limit = 90.5
+var pitch_limit = 0.6
 
 var leftWeaponSelected = 0
 var leftWeaponNode = []
@@ -265,11 +265,12 @@ func _physics_process(delta):
 		if (intentDir.length_squared() > 0.0):
 			look_at(translation + intentDir, Vector3(0.0,1.0,0.0))
 		
-		
-		yaw_torso_facing = global.closerDirVector(yaw_torso_facing, Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y), torso_yawspeed)
+		var end_yaw = Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y)
+		yaw_torso_facing = global.closerDirVector(yaw_torso_facing, end_yaw, torso_yawspeed)
 		var limited_pitch = max(camera_x, -pitch_limit)
 		limited_pitch = min(limited_pitch, pitch_limit)
-		pitch_torso_facing = global.closerDirVector(pitch_torso_facing, Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch), torso_pitchspeed)
+		var end_pitch = Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch)
+		pitch_torso_facing = global.closerDirVector(pitch_torso_facing, end_pitch, torso_pitchspeed)
 		
 		torso_skeleton.set_bone_pose(torso_yaw_bone_id, torso_yaw_bone_transform.rotated(Vector3(0,0,1), atan2(yaw_torso_facing.x, yaw_torso_facing.z)))
 		torso_skeleton.set_bone_pose(torso_pitch_bone_id, torso_pitch_bone_transform.rotated(Vector3(1,0,0), atan2(pitch_torso_facing.y, pitch_torso_facing.z)))
@@ -316,15 +317,36 @@ func fireLeft():
 		leftWeaponNode[leftWeaponSelected].get_child(0).fire(id)
 
 func aim(group):
-	if (rightWeaponNode[rightWeaponSelected].get_child_count() > 0): rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true)
-	if (leftWeaponNode[leftWeaponSelected].get_child_count() > 0): leftWeaponNode[leftWeaponSelected].get_child(0).aim(group)"
+	var ret = false
+	if (leftWeaponNode[leftWeaponSelected].get_child_count() > 0):
+		ret = leftWeaponNode[leftWeaponSelected].get_child(0).aim(group) or ret
+	if (rightWeaponNode[rightWeaponSelected].get_child_count() > 0):
+		ret = rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true) or ret 
+	return ret
+
+func aimLeft(group):
+	if (leftWeaponNode[leftWeaponSelected].get_child_count() > 0):
+		return leftWeaponNode[leftWeaponSelected].get_child(0).aim(group)
+func aimRight(group):
+	if (rightWeaponNode[rightWeaponSelected].get_child_count() > 0):
+		return rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true)
+
+func look(x, y):
+	camera_x = x
+	camera_y = y
+	
+	var end_yaw = Vector3(0,0,1).rotated(Vector3(0,-1,0), camera_y)
+	var limited_pitch = max(camera_x, -pitch_limit)
+	limited_pitch = min(limited_pitch, pitch_limit)
+	var end_pitch = Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch)
+	return abs(yaw_torso_facing.angle_to(end_yaw)) < 0.1 and abs(pitch_torso_facing.angle_to(end_pitch)) < 0.1"
 
 [sub_resource type="CapsuleShape" id=2]
 
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody"]
+[node name="KinematicBody" type="KinematicBody" index="0"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
@@ -383,15 +405,15 @@ data = {
 "connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim",
 "position": Vector2( 80, 67 ),
 "type": "animation"
-}, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
 }, {
 "animation": null,
 "filter": [  ],
@@ -399,16 +421,16 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
-}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
+}, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]

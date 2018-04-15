@@ -35,9 +35,11 @@ func aim(group, is_flipped = false):
 			aimSprite.set_offset(global.player.CCam.unproject_position(found[0].getAimPos()))
 		
 		target = found[0]
+		return true
 		
 	else:
 		aimSprite.hide()
+		return false
 
 func fire(id, is_flipped = false):
 	var node = global.missileScene.instance()
