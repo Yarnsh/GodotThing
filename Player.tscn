@@ -101,7 +101,7 @@ func getPos():
 func getVel():
 	return Mech.vel"
 
-[node name="Player" type="Node" index="0"]
+[node name="Player" type="Node"]
 
 script = SubResource( 1 )
 
@@ -155,6 +155,5 @@ visible = false
 [node name="HUD" parent="." index="2" instance=ExtResource( 3 )]
 
 margin_top = 502.0
-margin_bottom = 600.0
 
 
