@@ -20,13 +20,13 @@ var WEAPONS = [
 ]
 
 var LEGS = [
-	load("res://Scripts/legs.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae"),
-	load("res://Scripts/legs.gd").new("Taurus", "res://Things/Mechs/Taurus/Taurus_legs.dae")
+	load("res://Scripts/legs.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/AdamMk2Legs.tscn"),
+	load("res://Scripts/legs.gd").new("Taurus", "res://Things/Mechs/Taurus/TaurusLegs.tscn")
 ]
 
 var TORSOS = [
-	load("res://Scripts/torso.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/ADAMmk2_body.dae"),
-	load("res://Scripts/torso.gd").new("HITMAN", "res://Things/Mechs/Hitman/HITMAN_body.dae")
+	load("res://Scripts/torso.gd").new("ADAM Mk2", "res://Things/Mechs/AdamMk2/AdamMk2Torso.tscn"),
+	load("res://Scripts/torso.gd").new("HITMAN", "res://Things/Mechs/Hitman/HitmanTorso.tscn")
 ]
 
 var bodyPart = 0

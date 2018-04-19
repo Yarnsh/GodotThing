@@ -1,0 +1,249 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/hurtbox.gd" type="Script" id=2]
+
+[sub_resource type="GDScript" id=2]
+
+script/source = "extends Spatial
+
+onready var skeleton = $\"Scene Root/leg_armature/Skeleton\"
+onready var waistHurtbox = $\"Scene Root/leg_armature/Skeleton/Waist/StaticBody\"
+onready var uLegLHurtbox = $\"Scene Root/leg_armature/Skeleton/ULegL/StaticBody\"
+onready var mLegLHurtbox = $\"Scene Root/leg_armature/Skeleton/MLegL/StaticBody\"
+onready var lLegLHurtbox = $\"Scene Root/leg_armature/Skeleton/LLegL/StaticBody\"
+onready var uLegRHurtbox = $\"Scene Root/leg_armature/Skeleton/ULegR/StaticBody\"
+onready var mLegRHurtbox = $\"Scene Root/leg_armature/Skeleton/MLegR/StaticBody\"
+onready var lLegRHurtbox = $\"Scene Root/leg_armature/Skeleton/LLegR/StaticBody\"
+
+func _ready():
+	pass
+
+func init(owner):
+	waistHurtbox.init(owner)
+	uLegLHurtbox.init(owner)
+	mLegLHurtbox.init(owner)
+	lLegLHurtbox.init(owner)
+	uLegRHurtbox.init(owner)
+	mLegRHurtbox.init(owner)
+	lLegRHurtbox.init(owner)"
+
+[sub_resource type="BoxShape" id=1]
+
+extents = Vector3( 1.98715, 0.797003, 0.541297 )
+
+[sub_resource type="BoxShape" id=3]
+
+extents = Vector3( 0.608935, 0.564133, 1.42133 )
+
+[sub_resource type="BoxShape" id=4]
+
+extents = Vector3( 0.608935, 0.564133, 1.42133 )
+
+[sub_resource type="BoxShape" id=5]
+
+extents = Vector3( 0.511525, 0.299653, 0.87947 )
+
+[sub_resource type="BoxShape" id=6]
+
+extents = Vector3( 0.511525, 0.299653, 0.87947 )
+
+[sub_resource type="BoxShape" id=7]
+
+extents = Vector3( 0.409497, 0.318458, 0.918932 )
+
+[sub_resource type="BoxShape" id=8]
+
+extents = Vector3( 0.409497, 0.318458, 0.918932 )
+
+[node name="Spatial" type="Spatial"]
+
+script = SubResource( 2 )
+
+[node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]
+
+[node name="Waist" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="1"]
+
+editor/display_folded = true
+transform = Transform( -1, -6.12281e-07, -1.55522e-08, 1.55522e-08, 3.46606e-15, -1, 6.12281e-07, -1, 6.05625e-15, 2.27988e-07, 3.77078, 0.69903 )
+bone_name = "Waist"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/Waist" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/Waist/StaticBody" index="0"]
+
+shape = SubResource( 1 )
+disabled = false
+
+[node name="ULegL" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="2"]
+
+editor/display_folded = true
+transform = Transform( 1, -6.20024e-07, 1.84641e-07, 2.52669e-07, 0.640877, 0.767644, -5.6185e-07, -0.767644, 0.640877, -1.50912, 3.77078, 0.699691 )
+bone_name = "Uleg.L"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/ULegL" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/ULegL/StaticBody" index="0"]
+
+transform = Transform( 1, 6.25278e-13, -7.95808e-13, 2.84217e-14, 1, 2.98023e-08, -1.7053e-13, -2.68221e-07, 1, -2.38419e-07, 0.0697097, -0.924182 )
+shape = SubResource( 3 )
+disabled = false
+
+[node name="ULegR" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="3"]
+
+editor/display_folded = true
+transform = Transform( 1, 1.54836e-07, 2.44246e-07, -2.53971e-07, 0.640877, 0.767644, -5.52109e-08, -0.767644, 0.640877, 1.50912, 3.77078, 0.69969 )
+bone_name = "Uleg.R"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/ULegR" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/ULegR/StaticBody" index="0"]
+
+transform = Transform( 1, 6.25278e-13, -7.95808e-13, 2.84217e-14, 1, 2.98023e-08, -1.7053e-13, -2.68221e-07, 1, -2.38419e-07, 0.0697097, -0.924182 )
+shape = SubResource( 4 )
+disabled = false
+
+[node name="MLegL" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="4"]
+
+editor/display_folded = true
+transform = Transform( -1, 3.57779e-07, -2.60765e-07, 2.58734e-07, 0.947648, 0.319316, 3.28918e-07, 0.319316, -0.947648, -1.50912, 2.36279, -0.475789 )
+bone_name = "Mleg.L"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/MLegL" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/MLegL/StaticBody" index="0"]
+
+transform = Transform( 1, -1.42109e-14, 8.52651e-14, -1.91847e-13, 1, -2.98023e-07, 2.84217e-14, 2.98023e-07, 1, -3.57628e-07, -0.0462337, -0.622612 )
+shape = SubResource( 5 )
+disabled = false
+
+[node name="MLegR" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="5"]
+
+editor/display_folded = true
+transform = Transform( -1, 4.10911e-07, -2.86728e-07, 2.65088e-07, 0.947648, 0.319316, 4.20467e-07, 0.319316, -0.947648, 1.50912, 2.36279, -0.47579 )
+bone_name = "Mleg.R"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/MLegR" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/MLegR/StaticBody" index="0"]
+
+transform = Transform( 1, -1.42109e-14, 8.52651e-14, -1.91847e-13, 1, -2.98023e-07, 2.84217e-14, 2.98023e-07, 1, -3.57628e-07, -0.0462337, -0.622612 )
+shape = SubResource( 6 )
+disabled = false
+
+[node name="LLegL" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="6"]
+
+editor/display_folded = true
+transform = Transform( 1, -6.09919e-07, 1.72682e-07, 1.14859e-07, 0.446493, 0.894787, -5.90409e-07, -0.894787, 0.446493, -1.50912, 1.96235, 0.712608 )
+bone_name = "Lleg.L"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/LLegL" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/LLegL/StaticBody" index="0"]
+
+transform = Transform( 1, 2.27374e-13, -2.84217e-14, -3.41061e-13, 1, 0, -2.84217e-14, 0, 1, 3.57628e-07, 0.0182855, -0.698677 )
+shape = SubResource( 7 )
+disabled = false
+_sections_unfolded = [ "Transform" ]
+
+[node name="LLegR" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="7"]
+
+editor/display_folded = true
+transform = Transform( 1, 5.10512e-08, 1.42278e-07, -1.17349e-07, 0.446493, 0.894787, -3.53848e-08, -0.894787, 0.446493, 1.50912, 1.96235, 0.712607 )
+bone_name = "Lleg.R"
+_sections_unfolded = [ "Transform" ]
+
+[node name="StaticBody" type="StaticBody" parent="Scene Root/leg_armature/Skeleton/LLegR" index="0"]
+
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 4
+collision_mask = 0
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/LLegR/StaticBody" index="0"]
+
+transform = Transform( 1, 2.27374e-13, -2.84217e-14, -3.41061e-13, 1, 0, -2.84217e-14, 0, 1, 3.57628e-07, 0.0182855, -0.698677 )
+shape = SubResource( 8 )
+disabled = false
+_sections_unfolded = [ "Transform" ]
+
+
+[editable path="Scene Root"]

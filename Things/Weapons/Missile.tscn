@@ -242,7 +242,7 @@ _sections_unfolded = [ "Geometry", "Transform", "Visibility" ]
 enabled = true
 exclude_parent = true
 cast_to = Vector3( 0, 0, 1 )
-collision_mask = 3
+collision_mask = 5
 
 [node name="OmniLight" type="OmniLight" parent="." index="3"]
 

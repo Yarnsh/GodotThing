@@ -141,7 +141,7 @@ bone_name = "Fire0"
 enabled = false
 exclude_parent = true
 cast_to = Vector3( 0, 0, -100 )
-collision_mask = 3
+collision_mask = 5
 _sections_unfolded = [ "Transform" ]
 
 [node name="RayCast2" type="RayCast" parent="Scene Root/gattlinggun/Skeleton/BoneAttachment" index="1"]

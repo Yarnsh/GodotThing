@@ -75,14 +75,16 @@ var mat2 = SpatialMaterial.new()
 
 func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2, pattern2):
 	var base_node = get_node(\"Model\")
-	var legs = get_node(\"Model/Scene Root\")
+	var legs = get_node(\"Model/Spatial\")
 	if (legs != null):
 		legs.name = \"oldlegs\"
 		legs.call_deferred(\"free\")
 	
 	legs = load(global.LEGS[legPart].path).instance()
 	base_node.add_child(legs)
-	var legs_skel = legs.get_node(\"leg_armature/Skeleton\")
+	legs.init(self)
+	var legs_skel = legs.skeleton
+	leg_skeleton = legs.skeleton
 	legs_skel.get_child(0).set_mesh(legs_skel.get_child(0).get_mesh().duplicate())
 	var t_attach = BoneAttachment.new()
 	t_attach.name = \"TorsoAttach\"
@@ -91,7 +93,9 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 	
 	var torso = load(global.TORSOS[bodyPart].path).instance()
 	t_attach.add_child(torso)
-	var torso_skel = torso.get_node(\"body_armature/Skeleton\")
+	torso.init(self)
+	torso_skeleton = torso.skeleton
+	var torso_skel = torso.skeleton
 	torso_skel.get_child(0).set_mesh(torso_skel.get_child(0).get_mesh().duplicate())
 	
 	var leftWeps = []
@@ -186,25 +190,22 @@ func buildMech(legPart, bodyPart, lWepParts, rWepParts, color1, pattern1, color2
 	mesh.surface_set_material(2, mat2)
 
 func _ready_nodes():
-	leg_skeleton = get_node(\"Model/Scene Root/leg_armature/Skeleton\")
-	
-	torso_skeleton = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton\")
 	torso_yaw_bone_id = torso_skeleton.find_bone(\"Yaw\")
 	torso_yaw_bone_transform = torso_skeleton.get_bone_pose(torso_yaw_bone_id)
 	torso_pitch_bone_id = torso_skeleton.find_bone(\"Pitch\")
 	torso_pitch_bone_transform = torso_skeleton.get_bone_pose(torso_pitch_bone_id)
 	
 	for i in range(0, leftWeaponNode.size()):
-		leftWeaponNode[i] = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/LeftWeapon\" + String(i) + \"/Spatial\")
+		leftWeaponNode[i] = torso_skeleton.get_node(\"LeftWeapon\" + String(i) + \"/Spatial\")
 	
 	for i in range(0, rightWeaponNode.size()):
-		rightWeaponNode[i] = get_node(\"Model/Scene Root/leg_armature/Skeleton/TorsoAttach/Scene Root/body_armature/Skeleton/RightWeapon\" + String(i) + \"/Spatial\")
+		rightWeaponNode[i] = torso_skeleton.get_node(\"RightWeapon\" + String(i) + \"/Spatial\")
 	
 	floorStickRay = get_node(\"Model/FloorStickRay\")
 	
 	var aTreePlayer = get_node(\"Model/AnimationTreePlayer\")
-	aTreePlayer.set_base_path(NodePath(\"../Scene Root\"))
-	aTreePlayer.set_master_player(NodePath(\"../Scene Root/AnimationPlayer\"))
+	aTreePlayer.set_base_path(NodePath(\"../Spatial/Scene Root\"))
+	aTreePlayer.set_master_player(NodePath(\"../Spatial/Scene Root/AnimationPlayer\"))
 	aTreePlayer.animation_node_set_master_animation(\"anim\", \"Idle\");
 	aTreePlayer.animation_node_set_master_animation(\"anim 2\", \"Walk-loop\");
 	aTreePlayer.animation_node_set_master_animation(\"anim 3\", \"Run-loop\");
@@ -321,7 +322,7 @@ func aim(group):
 	if (leftWeaponNode[leftWeaponSelected].get_child_count() > 0):
 		ret = leftWeaponNode[leftWeaponSelected].get_child(0).aim(group) or ret
 	if (rightWeaponNode[rightWeaponSelected].get_child_count() > 0):
-		ret = rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true) or ret 
+		ret = rightWeaponNode[rightWeaponSelected].get_child(0).aim(group, true) or ret
 	return ret
 
 func aimLeft(group):
@@ -339,7 +340,10 @@ func look(x, y):
 	var limited_pitch = max(camera_x, -pitch_limit)
 	limited_pitch = min(limited_pitch, pitch_limit)
 	var end_pitch = Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch)
-	return abs(yaw_torso_facing.angle_to(end_yaw)) < 0.1 and abs(pitch_torso_facing.angle_to(end_pitch)) < 0.1"
+	return abs(yaw_torso_facing.angle_to(end_yaw)) < 0.1 and abs(pitch_torso_facing.angle_to(end_pitch)) < 0.1
+
+func takeHit():
+	print(\"OWW!\")"
 
 [sub_resource type="CapsuleShape" id=2]
 
@@ -405,15 +409,15 @@ data = {
 "connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
 "animation": null,
 "filter": [  ],
 "id": "anim",
 "position": Vector2( 80, 67 ),
 "type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 }, {
 "animation": null,
 "filter": [  ],
@@ -421,16 +425,16 @@ data = {
 "position": Vector2( 78, 299 ),
 "type": "animation"
 }, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
+}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]

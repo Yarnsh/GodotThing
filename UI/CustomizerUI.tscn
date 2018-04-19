@@ -67,7 +67,7 @@ func _prepare_weapon_options():
 	for torso in global.TORSOS:
 		if (torso_selection == torso.name):
 			t = load(torso.path).instance()
-	var skeleton = t.get_node(\"body_armature/Skeleton\")
+	var skeleton = t.get_node(\"Scene Root/body_armature/Skeleton\")
 	left_weps = 0;
 	right_weps = 0;
 	for i in range(0, skeleton.get_bone_count()):

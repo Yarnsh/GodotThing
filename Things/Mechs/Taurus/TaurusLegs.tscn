@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Things/Mechs/Taurus/Taurus_legs.dae" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Spatial
+
+onready var skeleton = $\"Scene Root/leg_armature/Skeleton\"
+
+func _ready():
+	pass
+
+func init(owner):
+	print(\"REMEMBER TO MAKE TAURUS LEGS PROPERLY EVENTUALLY!\")"
+
+[node name="Spatial" type="Spatial"]
+
+script = SubResource( 1 )
+
+[node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]
+
+
+[editable path="Scene Root"]

@@ -2,31 +2,32 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.stex"
+path.s3tc="res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.s3tc.stex"
+path.etc2="res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.etc2.stex"
 
 [deps]
 
 source_file="res://Things/Mechs/AdamMk2/images/ADAMmk2_legtex.png"
 source_md5="9a2cd78ae7b2303644ce0abdf45d463b"
 
-dest_files=[ "res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.stex" ]
-dest_md5="6fd6b2f5eb327c3350b0ade6b44da7a5"
+dest_files=[ "res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.s3tc.stex", "res://.import/ADAMmk2_legtex.png-3efd6399f16c9ed6c8b9523ba4870a88.etc2.stex" ]
+dest_md5="38012804332dbab0abad29552470fc6e"
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/normal_map=0
-flags/repeat=0
+flags/repeat=true
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
-flags/srgb=2
+flags/srgb=1
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0
