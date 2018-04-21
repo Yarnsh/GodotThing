@@ -19,8 +19,7 @@ var parent_vel = Vector3(0,0,0)
 func init():
 	initp = global_transform.origin
 	grav = Vector3(0,-9.8,0)
-	vel = to_global(Vector3(0,0,-90)) - to_global(Vector3(0,0,0))
-	#vel += to_local(parent_vel) - to_local(Vector3(0,0,0))
+	vel = to_global(Vector3(0,0,-90)) - to_global(Vector3(0,0,0)) + parent_vel
 
 func _ready():
 	rayNode = get_node(\"RayCast\")
@@ -109,7 +108,7 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Emission", "Flags", "Parameters", "Vertex Color" ]
 
-[node name="Spatial" type="Spatial" index="0"]
+[node name="Spatial" type="Spatial"]
 
 script = SubResource( 1 )
 

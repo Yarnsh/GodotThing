@@ -74,6 +74,9 @@ func _process(delta):
 		if (Input.is_action_pressed(\"move_right\")):
 			dir += Vector3(1,0,0).rotated(Vector3(0,1,0), camrot.y)
 		
+		if (Input.is_action_pressed(\"dash\")):
+			Mech.dash(dir)
+		
 		if (Input.is_action_pressed(\"fire_left\")):
 			Mech.fireLeft()
 		if (Input.is_action_pressed(\"fire_right\")):
@@ -107,7 +110,7 @@ func stop():
 	print(\"Don't stop me now\")
 	Mech.health = 100"
 
-[node name="Player" type="Node"]
+[node name="Player" type="Node" index="0"]
 
 script = SubResource( 1 )
 

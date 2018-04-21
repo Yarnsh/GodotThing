@@ -32,6 +32,7 @@ var rotspeed = 0.07
 var deaccelspeed = 50
 var vel = Vector3()
 var slideVel = Vector3()
+var dashCooldown = 0
 var speedLimit = 25
 
 var intentSpeed = 10
@@ -247,6 +248,8 @@ func getRightWeaponCooling():
 func _physics_process(delta):
 	if (is_ready):
 		
+		dashCooldown -= delta
+		
 		dir = Vector3(dir.x, 0, dir.z)
 		dir = dir.normalized()
 		intentDir = global.closerDirVector(intentDir, dir, rotspeed)
@@ -353,7 +356,12 @@ func die():
 	get_parent().stop()
 
 func getHealth():
-	return health"
+	return health
+
+func dash(dir):
+	if (dashCooldown <= 0):
+		slideVel = dir * 50.0
+		dashCooldown = 1.0"
 
 [sub_resource type="CapsuleShape" id=2]
 
@@ -416,25 +424,12 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
+"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
 "master": NodePath(""),
 "nodes": [ {
-"animation": null,
-"filter": [  ],
-"id": "anim 3",
-"position": Vector2( 78, 299 ),
-"type": "animation"
-}, {
-"blend": -1.0,
-"id": "walkBlend",
-"position": Vector2( 345, 96 ),
-"type": "blend3"
-}, {
-"animation": null,
-"filter": [  ],
-"id": "anim 2",
-"position": Vector2( 78, 185 ),
-"type": "animation"
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 }, {
 "animation": null,
 "filter": [  ],
@@ -442,9 +437,22 @@ data = {
 "position": Vector2( 80, 67 ),
 "type": "animation"
 }, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
+"animation": null,
+"filter": [  ],
+"id": "anim 3",
+"position": Vector2( 78, 299 ),
+"type": "animation"
+}, {
+"animation": null,
+"filter": [  ],
+"id": "anim 2",
+"position": Vector2( 78, 185 ),
+"type": "animation"
+}, {
+"blend": -1.0,
+"id": "walkBlend",
+"position": Vector2( 345, 96 ),
+"type": "blend3"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
