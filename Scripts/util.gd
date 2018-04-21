@@ -257,3 +257,6 @@ func FindInAngle(group, start, direction, angle, distance = -1, ray = null):
 		ret.append(f[0])
 	
 	return ret
+
+func solveConstantAcceleration(t, a, v, p):
+	return p + (v * t) + (a * (t * t * 0.5))

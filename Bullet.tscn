@@ -8,22 +8,28 @@ script/source = "extends Spatial
 
 var shooter_id = -1
 
+var initp
+var t = 0.0
 var ttl = 12.0
 var rayNode
-var vel = Vector3(0,0,-90)
+var vel
 var grav
 var parent_vel = Vector3(0,0,0)
 
 func init():
-	grav = to_local(Vector3(0,-9.8,0)) - to_local(Vector3(0,0,0))
-	vel += to_local(parent_vel) - to_local(Vector3(0,0,0))
+	initp = global_transform.origin
+	grav = Vector3(0,-9.8,0)
+	vel = to_global(Vector3(0,0,-90)) - to_global(Vector3(0,0,0))
+	#vel += to_local(parent_vel) - to_local(Vector3(0,0,0))
 
 func _ready():
 	rayNode = get_node(\"RayCast\")
 	init()
 
 func _process(delta):
-	rayNode.cast_to = vel*delta
+	var newp = util.solveConstantAcceleration(t+delta, grav, vel, initp)
+	
+	rayNode.cast_to = to_local(newp - global_transform.origin) - to_local(Vector3(0,0,0))
 	rayNode.force_raycast_update()
 	if (rayNode.is_colliding()):
 		var node = rayNode.get_collider()
@@ -39,12 +45,12 @@ func _process(delta):
 			
 			free()
 			return
-	translate(vel*delta)
+	global_translate(newp - global_transform.origin)
 	ttl -= delta
+	t += delta
 	if (ttl <= 0.0):
 		free()
 		return
-	vel += grav*delta
 "
 
 [sub_resource type="SpatialMaterial" id=2]
@@ -103,7 +109,7 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Emission", "Flags", "Parameters", "Vertex Color" ]
 
-[node name="Spatial" type="Spatial"]
+[node name="Spatial" type="Spatial" index="0"]
 
 script = SubResource( 1 )
 
