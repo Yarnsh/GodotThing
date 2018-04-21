@@ -3,7 +3,7 @@
 [ext_resource path="res://Things/Mechs/AdamMk2/ADAMmk2_legs.dae" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/hurtbox.gd" type="Script" id=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 
 script/source = "extends Spatial
 
@@ -28,7 +28,7 @@ func init(owner):
 	mLegRHurtbox.init(owner)
 	lLegRHurtbox.init(owner)"
 
-[sub_resource type="BoxShape" id=1]
+[sub_resource type="BoxShape" id=2]
 
 extents = Vector3( 1.98715, 0.797003, 0.541297 )
 
@@ -58,7 +58,7 @@ extents = Vector3( 0.409497, 0.318458, 0.918932 )
 
 [node name="Spatial" type="Spatial"]
 
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]
 
@@ -84,12 +84,11 @@ _sections_unfolded = [ "Collision" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="Scene Root/leg_armature/Skeleton/Waist/StaticBody" index="0"]
 
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 disabled = false
 
 [node name="ULegL" type="BoneAttachment" parent="Scene Root/leg_armature/Skeleton" index="2"]
 
-editor/display_folded = true
 transform = Transform( 1, -6.20024e-07, 1.84641e-07, 2.52669e-07, 0.640877, 0.767644, -5.6185e-07, -0.767644, 0.640877, -1.50912, 3.77078, 0.699691 )
 bone_name = "Uleg.L"
 _sections_unfolded = [ "Transform" ]

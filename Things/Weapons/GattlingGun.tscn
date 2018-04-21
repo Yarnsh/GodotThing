@@ -59,6 +59,10 @@ func fire(id, is_flipped = false):
 		splash.global_translate(bulletRay.get_collision_point())
 		splash.set_emitting(true)
 		dist_to_hit = (bulletRay.get_collision_point() - bulletRay.global_transform.origin).length()
+		
+		var hitshape = bulletRay.get_collider()
+		if (hitshape.has_method(\"takeHit\")):
+			hitshape.takeHit(1)
 	
 	var bulletTrace = global.shotTraceScene.instance()
 	bulletTrace.set_transform(fireNode.global_transform)
@@ -125,11 +129,15 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Flags", "Parameters", "Vertex Color" ]
 
-[node name="Scene Root" type="Spatial"]
+[node name="Scene Root" type="Spatial" index="0"]
 
 script = SubResource( 1 )
 
 [node name="Scene Root" parent="." index="0" instance=ExtResource( 1 )]
+
+[node name="Skeleton" parent="Scene Root/gattlinggun" index="0"]
+
+bones/2/bound_children = [ NodePath("BoneAttachment") ]
 
 [node name="BoneAttachment" type="BoneAttachment" parent="Scene Root/gattlinggun/Skeleton" index="1"]
 

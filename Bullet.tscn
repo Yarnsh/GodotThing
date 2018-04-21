@@ -35,7 +35,7 @@ func _process(delta):
 			splash.set_emitting(true)
 			
 			if (node.has_method(\"takeHit\")):
-				node.takeHit();
+				node.takeHit(35);
 			
 			free()
 			return

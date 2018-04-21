@@ -19,6 +19,11 @@ config/icon="res://icon.png"
 util="*res://Scripts/util.gd"
 global="*res://Scripts/global.gd"
 
+[display]
+
+window/stretch/aspect="keep"
+window/stretch/shrink="1"
+
 [importer_defaults]
 
 scene={

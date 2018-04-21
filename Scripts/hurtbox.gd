@@ -8,5 +8,5 @@ func _ready():
 func init(owner):
 	_owner = owner
 
-func takeHit():
-	_owner.takeHit()
+func takeHit(damage):
+	_owner.takeHit(damage)

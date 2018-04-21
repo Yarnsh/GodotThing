@@ -5,6 +5,7 @@
 script/source = "extends Node
 
 var ai_thread
+var alive = true
 
 var is_enemy
 
@@ -76,7 +77,7 @@ func _aim_at_target(atarget):
 	return _aim_at_point(atarget.getAimPos(), atarget.getVel())
 
 func _ai_process(par): #gonna make this specifically for target defence to start
-	while(true):
+	while(alive):
 		var adversaries
 		if (is_enemy):
 			adversaries = get_tree().get_nodes_in_group(\"friendly_ready\")
@@ -165,7 +166,14 @@ func getAimPos():
 func getPos():
 	return mech.global_transform.origin
 func getVel():
-	return mech.vel"
+	return mech.vel
+
+func stop():
+	set_physics_process(false)
+	alive = false
+	ai_thread.wait_to_finish()
+	print(\"God bless the Queen\")
+	queue_free()"
 
 [node name="MechController" type="Node"]
 

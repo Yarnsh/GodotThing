@@ -8,6 +8,8 @@ export(bool) var onPlayer = false
 var id = -1
 var is_ready = false
 
+var health = 100
+
 export(int, \"Adam Mk2\", \"Taurus\") var initLegs = 0
 export(int, \"Adam Mk2\", \"HITMAN\") var initTorso = 0
 export(int, \"None\", \"Gattling\", \"Howitzer\", \"Missile\") var initLWep1 = 0
@@ -342,15 +344,23 @@ func look(x, y):
 	var end_pitch = Vector3(0,0,1).rotated(Vector3(1,0,0), limited_pitch)
 	return abs(yaw_torso_facing.angle_to(end_yaw)) < 0.1 and abs(pitch_torso_facing.angle_to(end_pitch)) < 0.1
 
-func takeHit():
-	print(\"OWW!\")"
+func takeHit(damage):
+	health -= damage
+	if (health <= 0):
+		die()
+
+func die():
+	get_parent().stop()
+
+func getHealth():
+	return health"
 
 [sub_resource type="CapsuleShape" id=2]
 
 radius = 1.90303
 height = 2.81633
 
-[node name="KinematicBody" type="KinematicBody" index="0"]
+[node name="KinematicBody" type="KinematicBody"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0113586 )
 input_ray_pickable = true
@@ -406,19 +416,9 @@ base_path = NodePath("")
 active = true
 data = {
 "active": true,
-"connections": [ "walkBlend", "out", 0, "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2 ],
+"connections": [ "anim", "walkBlend", 0, "anim 2", "walkBlend", 1, "anim 3", "walkBlend", 2, "walkBlend", "out", 0 ],
 "master": NodePath(""),
 "nodes": [ {
-"animation": null,
-"filter": [  ],
-"id": "anim",
-"position": Vector2( 80, 67 ),
-"type": "animation"
-}, {
-"id": "out",
-"position": Vector2( 624, 100 ),
-"type": "output"
-}, {
 "animation": null,
 "filter": [  ],
 "id": "anim 3",
@@ -435,6 +435,16 @@ data = {
 "id": "anim 2",
 "position": Vector2( 78, 185 ),
 "type": "animation"
+}, {
+"animation": null,
+"filter": [  ],
+"id": "anim",
+"position": Vector2( 80, 67 ),
+"type": "animation"
+}, {
+"id": "out",
+"position": Vector2( 624, 100 ),
+"type": "output"
 } ]
 }
 _sections_unfolded = [ "Playback" ]
